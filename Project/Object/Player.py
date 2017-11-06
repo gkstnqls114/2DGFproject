@@ -3,24 +3,12 @@ import os
 import random
 from pico2d import *
 
-from Scene import pause_state
-from Scene import title_state
-from Framwork import game_framework
 
-name = "MainState"
+name = "Player"
 
 boy = None
 grass = None
 font = None
-
-
-class Grass:
-    def __init__(self):
-        self.image = load_image('grass.png')
-
-    def draw(self):
-        self.image.draw(400, 30)
-
 
 
 class Boy:
@@ -101,51 +89,6 @@ class Boy:
             self.runningTime = 0
             self.dir = 1
 
-
-def enter():
-    global boy, grass
-    boy = Boy()
-    grass = Grass()
-
-
-def exit():
-    global boy, grass
-    del(boy)
-    del(grass)
-
-
-def pause():
-    pass
-
-def resume():
-    pass
-
-def handle_events():
-    events = get_events()
-
-    for event in events:
-        if event.type == SDL_QUIT:
-            game_framework.quit()
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.change_state(title_state)
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_p:
-            game_framework.push_state(pause_state)
-        else:
-            boy.handle_events(event)
-
-def update():
-    boy.update()
-
-
-def draw_scene():
-    grass.draw()
-    boy.draw()
-
-
-def draw():
-    clear_canvas()
-    draw_scene()
-    update_canvas()
 
 
 

@@ -1,7 +1,7 @@
 from pico2d import *
 
 from Framwork import game_framework
-import main_state
+from Scene import main_state
 
 
 
