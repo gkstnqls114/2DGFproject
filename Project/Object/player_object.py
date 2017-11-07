@@ -21,13 +21,18 @@ class Player:
         self.Run = False
         self.Right = False
         self.Left = False
+        self.Up = False
+        self.Down = False
 
         #계단을 올라 가는 bool
-        self.Around_Top_Stairs = False #계단이 주변에 있다, 플레이어가 계단의 아래에 있음
-        self.Around_Bottom_Stairs = False  # 계단이 주변에 있다, 플레이어가 계단의 위에 있음
-        self.Stairs_Up = False
-        self.Stairs_Down = False
+        self.top_range = 0
+        self.bottom_range = 0
+        self.Stairs_Can_Up = False
+        self.Stairs_Can_Down = False
+        self.Stairs_Move = False
 
+        #현재 플레이어가 있는 플로어
+        self.floor_at_present = 1
 
         self.runningTime = 0
         self.pause = (self.x, self.y, self.frame, self.dir)
@@ -37,43 +42,55 @@ class Player:
 
         self.runningFunc()
 
+
         if(self.Right):
             self.x += self.dir
         if (self.Left):
             self.x -= self.dir
-        if(self.Stairs_Up):
-            self.x += self.dir
-            self.y += self.dir
-        if (self.Stairs_Down):
-            self.x -= self.dir
-            self.y -= self.dir
+        if(self.Up):
+            if(self.top_range < self.y - self.heigth / 2):
+                self.Up = False
+                self.Stairs_Move = False
+                self.y = self.top_range + self.heigth / 2
+            else:
+                self.x += self.dir
+                self.y += self.dir
+        if (self.Down):
+            if(self.bottom_range > self.y - self.heigth / 2):
+                self.Down = False
+                self.Stairs_Move = False
+                self.y = self.bottom_range + self.heigth / 2
+            else:
+                self.x -= self.dir
+                self.y -= self.dir
+
 
     def draw(self):
         #self.image.clip_draw(self.frame * 100, 0, 100, 100, self.x, self.y)
-        if( self.Around_Top_Stairs or self.Around_Bottom_Stairs):
-            self.image.draw( self.x, self.y)
-            pass
-        else:
-            self.image.draw(self.x, self.y)
-            pass
+         self.image.draw( self.x, self.y)
+
 
     def handle_events(self, event):
             # key down
 
         if event.type == SDL_KEYDOWN:
             z = 122
-            if event.key == z:
+            if event.key == z :
                 self.Run = True
-            elif event.key == SDLK_RIGHT:
+            elif event.key == SDLK_RIGHT and (not self.Stairs_Move):
                 self.Right = True
-            elif  event.key == SDLK_LEFT:
+            elif  event.key == SDLK_LEFT and (not self.Stairs_Move):
                 self.Left = True
-            elif event.key == SDLK_UP and self.Around_Bottom_Stairs:
-                self.Stairs_Up = True
-            elif event.key == SDLK_DOWN and self.Around_Top_Stairs:
-                self.Stairs_Down = True
+            elif event.key == SDLK_UP and (self.Stairs_Can_Up or self.Stairs_Move):
+                self.Stairs_Can_Up = False
+                self.Stairs_Move = True
+                self.Up = True
+            elif event.key == SDLK_DOWN and (self.Stairs_Can_Down or self.Stairs_Move):
+                self.Stairs_Can_Down = False
+                self.Stairs_Move = True
+                self.Down = True
 
-            # key up
+        # key up
 
         if event.type == SDL_KEYUP:
             z = 122
@@ -84,9 +101,9 @@ class Player:
             elif  event.key == SDLK_LEFT:
                 self.Left = False
             elif event.key == SDLK_UP:
-                self.Stairs_Up = False
+                self.Up = False
             elif event.key ==SDLK_DOWN:
-                self.Stairs_Down = False
+                self.Down = False
 
 
     def runningFunc(self):
@@ -100,30 +117,35 @@ class Player:
 
     def around_stairs(self, stairs):
         #바닥 계단 존재하는 부분
-        if (self.x > stairs.x - stairs.width/2 - 30) and (self.x <= stairs.x - stairs.width/2 + 30 + self.heigth)\
-                and (self.y > stairs.y - stairs.height/2 - 30) and (self.y <= stairs.y -  stairs.height / 2 + 30 +  self.heigth):
-            self.Around_Bottom_Stairs = True
-            self.Around_Top_Stairs = False
-            print("근처에 계단있다. 아래")
 
-        #윗 부분 계단 존재한다.
-        if (self.x > stairs.x + 70 and self.x <= stairs.x + 130 and self.y > stairs.y + 70 and self.y <= stairs.y + 130):
-            self.Around_Bottom_Stairs = False
-            self.Around_Top_Stairs = True
-            print("근처에 계단있다. 위")
+        #임시
+        stairs_bottom_range = [ stairs.x - stairs.width/2 - 30, stairs.x - stairs.width/2 + 30
+            , stairs.y - stairs.height/2 - 30, stairs.y - stairs.height/2 + 30 ]
 
-        #올라가는 도중
-            # if(self.x > stairs.x - 100 and  self.x < stairs.x + 100 and self.y > stairs.y - 100 and self.y < stairs.y + 100) and (self.Stairs_Down or self.Stairs_Up):
-            #     self.Around_Bottom_Stairs = True
-            #     self.Around_Top_Stairs = True
-            #     print("계단 올라가는 도중")
-            #  else:
-            #      print("근처에 계단 없음")
-            #      self.Around_Bottom_Stairs = False
-            #      self.Around_Top_Stairs = False
+        stairs_top_range = [stairs.x + stairs.width / 2 - 30, stairs.x + stairs.width / 2 + 30
+            , stairs.y + stairs.height / 2 - 30, stairs.y + stairs.height / 2 + 30]
 
-        print(stairs.x - stairs.width/2 - 30, "   ",stairs.y -  stairs.height / 2 - 30 )
-        print ("계단 : ", stairs.x, " , ", stairs.y, "     나: ", self.x," , ", self.y)
+        You_Are_Bottom_Stairs = (self.x > stairs_bottom_range[0]) and (self.x <= stairs_bottom_range[1])\
+                and (self.y - self.heigth / 2 > stairs_bottom_range[2]) and (self.y - self.heigth / 2 <= stairs_bottom_range[3])
+        if You_Are_Bottom_Stairs:
+            self.Stairs_Can_Up = True
+            self.Stairs_Can_Down = False
+            self.top_range = stairs.y + stairs.height / 2
+            self.bottom_range = stairs.y - stairs.height / 2
+            print("당신은 계단 아래 쪽에 있다.")
+
+        You_Are_Bottom_Stairs = (self.x > stairs_top_range[0]) and (self.x <= stairs_top_range[1]) \
+               and (self.y - self.heigth / 2 > stairs_top_range[2]) and (self.y - self.heigth / 2 <= stairs_top_range[3])
+        if You_Are_Bottom_Stairs:
+            self.Stairs_Can_Up = False
+            self.Stairs_Can_Down = True
+            self.top_range = stairs.y + stairs.height / 2
+            self.bottom_range = stairs.y - stairs.height / 2
+            print("당신은 계단 위 쪽에 있다.")
+
+
+
+        print ("     나: ", self.x," , ", self.y)
 
 
 
