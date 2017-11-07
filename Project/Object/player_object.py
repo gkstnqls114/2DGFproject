@@ -11,7 +11,7 @@ class Player:
     def __init__(self):
         self.width = 70
         self.heigth = 100
-        self.x, self.y = 0, self.heigth
+        self.x, self.y = 0, self.heigth / 2 + 90
 
         self.frame = 0
         self.image = load_image('샘플 플레이어.png')
@@ -81,17 +81,32 @@ class Player:
                 self.Right = True
             elif  event.key == SDLK_LEFT and (not self.Stairs_Move):
                 self.Left = True
-            elif event.key == SDLK_UP and (self.Stairs_Can_Up or self.Stairs_Move):
+            elif event.key == SDLK_UP and self.Stairs_Can_Up:
                 self.Stairs_Can_Up = False
                 self.Stairs_Move = True
+                self.Right = False
+                self.Left = False
                 self.Up = True
-            elif event.key == SDLK_DOWN and (self.Stairs_Can_Down or self.Stairs_Move):
+            elif event.key == SDLK_UP and self.Stairs_Move:
+                self.Stairs_Can_Up = False
+                self.Stairs_Move = True
+                self.Right = False
+                self.Left = False
+                self.Up = True
+            elif event.key == SDLK_DOWN and self.Stairs_Can_Down:
                 self.Stairs_Can_Down = False
                 self.Stairs_Move = True
+                self.Right = False
+                self.Left = False
+                self.Down = True
+            elif event.key == SDLK_DOWN and self.Stairs_Move:
+                self.Stairs_Can_Down = False
+                self.Stairs_Move = True
+                self.Right = False
+                self.Left = False
                 self.Down = True
 
         # key up
-
         if event.type == SDL_KEYUP:
             z = 122
             if event.key == z:
@@ -143,9 +158,6 @@ class Player:
             self.bottom_range = stairs.y - stairs.height / 2
             print("당신은 계단 위 쪽에 있다.")
 
-
-
-        print ("     나: ", self.x," , ", self.y)
 
 
 

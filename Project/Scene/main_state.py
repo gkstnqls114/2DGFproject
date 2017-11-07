@@ -22,10 +22,12 @@ font = None
 
 class Grass:
     def __init__(self):
-        self.image = load_image('grass.png')
+        self.image = load_image('샘플 바닥.png')
+        self.width = 800
+        self.height = 90
 
     def draw(self):
-        self.image.draw(400, 30)
+        self.image.draw(400, self.height / 2)
 
 
 def enter():

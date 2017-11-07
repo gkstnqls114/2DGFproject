@@ -5,8 +5,10 @@ from pico2d import *
 
 name = "Guard"
 
+#현재 플레이어와 똑같음..
+#
 
-class Player:
+class Guard:
     def __init__(self):
         self.width = 70
         self.heigth = 100
