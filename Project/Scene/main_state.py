@@ -3,6 +3,9 @@ import os
 import random
 from pico2d import *
 
+#Manager
+from Manager import collision
+
 #Scene
 from Scene import pause_state
 from Scene import title_state
@@ -11,37 +14,33 @@ from Framwork import game_framework
 #Object
 from Object import player_object
 from Object import stairs_object
+from Object import floor_object
 
 name = "MainState"
 
-boy = None
-grass = None
+player = None
+floor = []
 stairs = None
 font = None
-
-
-class Grass:
-    def __init__(self):
-        self.image = load_image('샘플 바닥.png')
-        self.width = 800
-        self.height = 90
-
-    def draw(self):
-        self.image.draw(400, self.height / 2)
+collisionManager = None
 
 
 def enter():
-    global boy, grass, stairs
-    boy = player_object.Player()
+    global player, floor, stairs, collisionManager
+    player = player_object.Player()
     stairs = stairs_object.Stairs()
-    grass = Grass()
+    collisionManager = collision.Collision()
 
+    for i in range (0, 3):
+        floor.append(floor_object.Floor(i * 300, i))
+    pass
 
 def exit():
-    global boy, grass, stairs
-    del(boy)
-    del(grass)
+    global player, floor, stairs, collision
+    del(player)
+    del(floor)
     del(stairs)
+    del(collision)
 
 
 def pause():
@@ -61,17 +60,20 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_p:
             game_framework.push_state(pause_state)
         else:
-            boy.handle_events(event)
+            collisionManager.handle_events(event, player, stairs)
+            player.handle_events(event)
 
 def update():
-    boy.around_stairs(stairs)
-    boy.update()
+    collisionManager.update(player, stairs)
+    collisionManager.player_stair_collision(player, stairs)
+    player.update()
 
 
 def draw_scene():
-    grass.draw()
+    for i in range (0, 3):
+        floor[i].draw()
     stairs.draw()
-    boy.draw()
+    player.draw()
 
 
 

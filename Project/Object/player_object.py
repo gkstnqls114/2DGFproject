@@ -8,13 +8,23 @@ name = "Player"
 
 
 class Player:
+    font = None
+    position_font = None
+    image = None
     def __init__(self):
+        if Player.image == None:
+            Player.image = load_image('샘플 플레이어.png')
+        if Player.font == None:
+            Player.font = load_font('ENCR10B.TTF',16)
+        if Player.position_font == None:
+            Player.position_font = load_font('ENCR10B.TTF', 16)
+
         self.width = 70
-        self.heigth = 100
-        self.x, self.y = 0, self.heigth / 2 + 90
+        self.height = 100
+        self.x = 0
+        self.y = 50+  90
 
         self.frame = 0
-        self.image = load_image('샘플 플레이어.png')
         self.dir = 1
 
         #움직임 bool
@@ -42,33 +52,30 @@ class Player:
 
         self.runningFunc()
 
-
         if(self.Right):
             self.x += self.dir
         if (self.Left):
             self.x -= self.dir
         if(self.Up):
-            if(self.top_range < self.y - self.heigth / 2):
-                self.Up = False
-                self.Stairs_Move = False
-                self.y = self.top_range + self.heigth / 2
-            else:
-                self.x += self.dir
-                self.y += self.dir
+            self.y += self.dir
+            self.x += self.dir
         if (self.Down):
-            if(self.bottom_range > self.y - self.heigth / 2):
-                self.Down = False
-                self.Stairs_Move = False
-                self.y = self.bottom_range + self.heigth / 2
-            else:
-                self.x -= self.dir
-                self.y -= self.dir
-
+            self.y -= self.dir
+            self.x -= self.dir
 
     def draw(self):
         #self.image.clip_draw(self.frame * 100, 0, 100, 100, self.x, self.y)
-         self.image.draw( self.x, self.y)
+        self.image.draw( self.x, self.y)
+        self.draw_bb()
 
+        if(self.Stairs_Can_Up):
+            Player.font.draw(self.x - 35, self.y + 50, 'Can_Up')
+        elif(self.Stairs_Can_Down):
+            Player.font.draw(self.x - 35, self.y + 50, 'Can_Down')
+        elif( self.Stairs_Move):
+            Player.font.draw(self.x - 35 , self.y + 50, 'Stairs_Move')
+
+        #Player.position_font.draw(self.x - 50, self.y -50, 'X: %d, Y: %d' % (self.x, self.y))
 
     def handle_events(self, event):
             # key down
@@ -81,30 +88,14 @@ class Player:
                 self.Right = True
             elif  event.key == SDLK_LEFT and (not self.Stairs_Move):
                 self.Left = True
-            elif event.key == SDLK_UP and self.Stairs_Can_Up:
-                self.Stairs_Can_Up = False
-                self.Stairs_Move = True
-                self.Right = False
-                self.Left = False
-                self.Up = True
+            if event.key == SDLK_UP and self.Stairs_Can_Up:
+                self.stairs_up()
             elif event.key == SDLK_UP and self.Stairs_Move:
-                self.Stairs_Can_Up = False
-                self.Stairs_Move = True
-                self.Right = False
-                self.Left = False
-                self.Up = True
+                self.stairs_move_up()
             elif event.key == SDLK_DOWN and self.Stairs_Can_Down:
-                self.Stairs_Can_Down = False
-                self.Stairs_Move = True
-                self.Right = False
-                self.Left = False
-                self.Down = True
+                self.stairs_down()
             elif event.key == SDLK_DOWN and self.Stairs_Move:
-                self.Stairs_Can_Down = False
-                self.Stairs_Move = True
-                self.Right = False
-                self.Left = False
-                self.Down = True
+                self.stairs_move_down()
 
         # key up
         if event.type == SDL_KEYUP:
@@ -120,6 +111,39 @@ class Player:
             elif event.key ==SDLK_DOWN:
                 self.Down = False
 
+    def stairs_up(self):
+        self.Stairs_Can_Up = False
+        self.Stairs_Move = True
+        self.Right = False
+        self.Left = False
+        self.Up = True
+        self.Down = False
+
+        pass
+
+    def stairs_down(self):
+        self.Stairs_Can_Down = False
+        self.Stairs_Move = True
+        self.Right = False
+        self.Left = False
+        self.Up = False
+        self.Down = True
+
+    def stairs_move_down(self):
+        self.Stairs_Can_Down = False
+        self.Stairs_Move = True
+        self.Right = False
+        self.Left = False
+        self.Down = True
+        self.Up = False
+
+    def stairs_move_up(self):
+        self.Stairs_Can_Down = False
+        self.Stairs_Move = True
+        self.Right = False
+        self.Left = False
+        self.Down = False
+        self.Up = True
 
     def runningFunc(self):
         if self.Run:
@@ -130,34 +154,28 @@ class Player:
             self.dir = 1
 
 
-    def around_stairs(self, stairs):
-        #바닥 계단 존재하는 부분
-
-        #임시
-        stairs_bottom_range = [ stairs.x - stairs.width/2 - 30, stairs.x - stairs.width/2 + 30
-            , stairs.y - stairs.height/2 - 30, stairs.y - stairs.height/2 + 30 ]
-
-        stairs_top_range = [stairs.x + stairs.width / 2 - 30, stairs.x + stairs.width / 2 + 30
-            , stairs.y + stairs.height / 2 - 30, stairs.y + stairs.height / 2 + 30]
-
-        You_Are_Bottom_Stairs = (self.x > stairs_bottom_range[0]) and (self.x <= stairs_bottom_range[1])\
-                and (self.y - self.heigth / 2 > stairs_bottom_range[2]) and (self.y - self.heigth / 2 <= stairs_bottom_range[3])
-        if You_Are_Bottom_Stairs:
-            self.Stairs_Can_Up = True
-            self.Stairs_Can_Down = False
-            self.top_range = stairs.y + stairs.height / 2
-            self.bottom_range = stairs.y - stairs.height / 2
-            print("당신은 계단 아래 쪽에 있다.")
-
-        You_Are_Bottom_Stairs = (self.x > stairs_top_range[0]) and (self.x <= stairs_top_range[1]) \
-               and (self.y - self.heigth / 2 > stairs_top_range[2]) and (self.y - self.heigth / 2 <= stairs_top_range[3])
-        if You_Are_Bottom_Stairs:
-            self.Stairs_Can_Up = False
-            self.Stairs_Can_Down = True
-            self.top_range = stairs.y + stairs.height / 2
-            self.bottom_range = stairs.y - stairs.height / 2
-            print("당신은 계단 위 쪽에 있다.")
 
 
+    def get_bb(self):
+        return self.x - self.width / 2, self.y -self.height/ 2, self.x + self.width/2, self.y + self.width / 2
+        pass
 
+
+    def get_point(self):
+        return self.x , self.y - self.height / 2
+
+    def get_point_x(self):
+        #pivot return
+
+        return self.x
+        pass
+
+    def get_point_y(self):
+        # pivot return
+
+        return self.y - 45
+        pass
+
+    def draw_bb(self):
+        draw_rectangle(*self.get_bb())
 

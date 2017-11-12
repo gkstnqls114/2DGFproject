@@ -24,16 +24,9 @@ class Guard:
         self.Left = False
 
         # 계단을 올라 가는 bool
-        self.TopStair_range = [0, 0, 0, 0]  # 계단이 주변에 있다, 플레이어가 계단의 위에 있음
-        self.BottomStair_range = [0, 0, 0, 0]  # 계단이 주변에 있다, 플레이어가 계단의 아래 있음
-
         self.Stairs_Can_Up = False
         self.Stairs_Can_Down = False
         self.Stairs_Move = False
-
-        # 계단 범위
-        self.top_stairs_y = 0
-        self.bottom_stairs_y = 0
 
         # 현재 플레이어가 있는 플로어
         self.floor_at_present = 1
@@ -111,34 +104,6 @@ class Guard:
         else:
             self.dir = 1
 
-    def around_stairs(self, stairs):
-        # 바닥 계단 존재하는 부분
-        if (self.x > stairs.x - stairs.width / 2 - 30) and (self.x <= stairs.x - stairs.width / 2 + 30 + self.heigth) \
-                and (self.y > stairs.y - stairs.height / 2 - 30) and (
-            self.y <= stairs.y - stairs.height / 2 + 30 + self.heigth):
-            self.BottomStair_range = True
-            self.TopStair_range = False
-            print("근처에 계단있다. 아래")
-
-        # 윗 부분 계단 존재한다.
-        if (
-                        self.x > stairs.x + 70 and self.x <= stairs.x + 130 and self.y > stairs.y + 70 and self.y <= stairs.y + 130):
-            self.BottomStair_range = False
-            self.TopStair_range = True
-            print("근처에 계단있다. 위")
-
-            # 올라가는 도중
-            # if(self.x > stairs.x - 100 and  self.x < stairs.x + 100 and self.y > stairs.y - 100 and self.y < stairs.y + 100) and (self.Stairs_Can_Down or self.Stairs_Can_Up):
-            #     self.BottomStair_range = True
-            #     self.TopStair_range = True
-            #     print("계단 올라가는 도중")
-            #  else:
-            #      print("근처에 계단 없음")
-            #      self.BottomStair_range = False
-            #      self.TopStair_range = False
-
-        print(stairs.x - stairs.width / 2 - 30, "   ", stairs.y - stairs.height / 2 - 30)
-        print ("계단 : ", stairs.x, " , ", stairs.y, "     나: ", self.x, " , ", self.y)
 
 
 
