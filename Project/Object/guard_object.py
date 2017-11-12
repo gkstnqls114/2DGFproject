@@ -3,32 +3,45 @@ import os
 import random
 from pico2d import *
 
+
 name = "Guard"
 
-#현재 플레이어와 똑같음..
-#
-
 class Guard:
+    font = None
+    position_font = None
+    image = None
     def __init__(self):
+        if Guard.image == None:
+            Guard.image = load_image('샘플 경비원.png')
+        if Guard.font == None:
+            Guard.font = load_font('ENCR10B.TTF',16)
+
         self.width = 70
-        self.heigth = 100
-        self.x, self.y = 0, self.heigth
+        self.height = 90
+        self.x = 0
+        self.y = 50 + 85
 
         self.frame = 0
-        self.image = load_image('샘플 플레이어.png')
         self.dir = 1
 
-        # 움직임 bool
+        #움직임 bool
         self.Run = False
         self.Right = False
         self.Left = False
+        self.Up = False
+        self.Down = False
 
-        # 계단을 올라 가는 bool
+        #인식했는가 아닌가
+        self.SeePlayer = False
+
+        #계단을 올라 가는 bool
+        self.top_range = 0
+        self.bottom_range = 0
         self.Stairs_Can_Up = False
         self.Stairs_Can_Down = False
         self.Stairs_Move = False
 
-        # 현재 플레이어가 있는 플로어
+        #현재 경비원이 있는 플로어
         self.floor_at_present = 1
 
         self.runningTime = 0
@@ -39,66 +52,64 @@ class Guard:
 
         self.runningFunc()
 
-        # 계단 범위 넘어섰는가 확인
+        if(self.SeePlayer):
+            pass
 
-
-        if (self.Right):
-            self.x += self.dir
-        if (self.Left):
-            self.x -= self.dir
-        if (self.Stairs_Can_Up):
-            self.x += self.dir
-            self.y += self.dir
-        if (self.Stairs_Can_Down):
-            self.x -= self.dir
-            self.y -= self.dir
 
     def draw(self):
-        # self.image.clip_draw(self.frame * 100, 0, 100, 100, self.x, self.y)
-        if (self.TopStair_range or self.BottomStair_range):
-            self.image.draw(self.x, self.y)
-            pass
-        else:
-            self.image.draw(self.x, self.y)
-            pass
+        #self.image.clip_draw(self.frame * 100, 0, 100, 100, self.x, self.y)
+        self.image.draw( self.x, self.y)
+        self.draw_bb()
+
+        if(self.Stairs_Can_Up):
+            Guard.font.draw(self.x - 35, self.y + 50, 'Can_Up')
+        elif(self.Stairs_Can_Down):
+            Guard.font.draw(self.x - 35, self.y + 50, 'Can_Down')
+        elif( self.Stairs_Move):
+            Guard.font.draw(self.x - 35 , self.y + 50, 'Stairs_Move')
+
+        #Guard.position_font.draw(self.x - 50, self.y -50, 'X: %d, Y: %d' % (self.x, self.y))
 
     def handle_events(self, event):
-        # key down
+            # key down
+        pass
 
-        if event.type == SDL_KEYDOWN:
-            z = 122
-            if event.key == z:
-                self.Run = True
-            elif event.key == SDLK_RIGHT and not self.BottomStair_range:
-                self.Right = True
-            elif event.key == SDLK_LEFT and not self.BottomStair_range:
-                self.Left = True
-            elif event.key == SDLK_UP and self.BottomStair_range:
-                self.Stairs_Can_Up = True
-                self.Stairs_Move = True
-            elif event.key == SDLK_DOWN and self.TopStair_range:
-                self.Stairs_Can_Down = True
-                self.Stairs_Move = True
+    def stairs_up(self):
+        self.Stairs_Can_Up = False
+        self.Stairs_Move = True
+        self.Right = False
+        self.Left = False
+        self.Up = True
+        self.Down = False
 
-        # key up
+        pass
 
-        if event.type == SDL_KEYUP:
-            z = 122
-            if event.key == z:
-                self.Run = False
-            elif event.key == SDLK_RIGHT:
-                self.Right = False
-            elif event.key == SDLK_LEFT:
-                self.Left = False
-            elif event.key == SDLK_UP:
-                self.Stairs_Can_Up = False
+    def stairs_down(self):
+        self.Stairs_Can_Down = False
+        self.Stairs_Move = True
+        self.Right = False
+        self.Left = False
+        self.Up = False
+        self.Down = True
 
-            elif event.key == SDLK_DOWN:
-                self.Stairs_Can_Down = False
+    def stairs_move_down(self):
+        self.Stairs_Can_Down = False
+        self.Stairs_Move = True
+        self.Right = False
+        self.Left = False
+        self.Down = True
+        self.Up = False
+
+    def stairs_move_up(self):
+        self.Stairs_Can_Down = False
+        self.Stairs_Move = True
+        self.Right = False
+        self.Left = False
+        self.Down = False
+        self.Up = True
 
     def runningFunc(self):
         if self.Run:
-            print ("run")
             self.dir = 3
 
         else:
@@ -106,4 +117,27 @@ class Guard:
 
 
 
+
+    def get_bb(self):
+        return self.x - self.width / 2, self.y -self.height/ 2, self.x + self.width/2, self.y + self.width / 2
+        pass
+
+
+    def get_point(self):
+        return self.x , self.y - self.height / 2
+
+    def get_point_x(self):
+        #pivot return
+
+        return self.x
+        pass
+
+    def get_point_y(self):
+        # pivot return
+
+        return self.y - 45
+        pass
+
+    def draw_bb(self):
+        draw_rectangle(*self.get_bb())
 

@@ -4,7 +4,9 @@ import random
 from pico2d import *
 
 #Manager
-from Manager import collision
+from Manager import collision_manager
+from Manager import mediator_manager
+from Manager import camera_manager
 
 #Scene
 from Scene import pause_state
@@ -13,6 +15,7 @@ from Framwork import game_framework
 
 #Object
 from Object import player_object
+from Object import guard_object
 from Object import stairs_object
 from Object import floor_object
 
@@ -23,24 +26,30 @@ floor = []
 stairs = None
 font = None
 collisionManager = None
+guard = None
+mediatorManager = None
+cameraManager = None
 
 
 def enter():
-    global player, floor, stairs, collisionManager
+    global player, floor, stairs, collisionManager, guard, mediatorManager,cameraManager
     player = player_object.Player()
     stairs = stairs_object.Stairs()
-    collisionManager = collision.Collision()
+    collisionManager = collision_manager.Collision()
+    guard = guard_object.Guard()
+    mediatorManager = mediator_manager.Mediator()
+    cameraManager = camera_manager.Camera()
 
     for i in range (0, 3):
         floor.append(floor_object.Floor(i * 300, i))
     pass
 
 def exit():
-    global player, floor, stairs, collision
+    #일단 나중에 꼭 추가하기!
+    global player, floor, stairs
     del(player)
     del(floor)
     del(stairs)
-    del(collision)
 
 
 def pause():
@@ -62,6 +71,8 @@ def handle_events():
         else:
             collisionManager.handle_events(event, player, stairs)
             player.handle_events(event)
+            mediatorManager.handle_events(event)
+            cameraManager.handle_events(event)
 
 def update():
     collisionManager.update(player, stairs)
@@ -74,6 +85,7 @@ def draw_scene():
         floor[i].draw()
     stairs.draw()
     player.draw()
+    guard.draw()
 
 
 
