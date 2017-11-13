@@ -6,8 +6,8 @@ from pico2d import *
 
 from Scene import main_state
 
-name = "Mediator"
 
+name = "Mediator"
 
 class Mediator:
     def __init__(self):

@@ -41,6 +41,9 @@ class Player:
         self.Stairs_Can_Down = False
         self.Stairs_Move = False
 
+        #보물상자 터는 bool
+        self.Search = False
+
         #현재 플레이어가 있는 플로어
         self.floor_at_present = 1
 
@@ -50,17 +53,21 @@ class Player:
     def update(self):
         self.frame = (self.frame + 1) % 8
 
+
         self.runningFunc()
 
-        if(self.Right):
-            self.x += self.dir
-        if (self.Left):
-            self.x -= self.dir
+
         if(self.Up):
             self.y += self.dir
             self.x += self.dir
         if (self.Down):
             self.y -= self.dir
+            self.x -= self.dir
+
+        if(self.Stairs_Move): return
+        if (self.Right):
+            self.x += self.dir
+        if (self.Left):
             self.x -= self.dir
 
     def draw(self):

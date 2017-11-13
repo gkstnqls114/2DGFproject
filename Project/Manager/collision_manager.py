@@ -14,7 +14,9 @@ class Collision:
     def update(self, player, stairs):
         if(player.Stairs_Move and player.Up):
             # 올라가다가 계단 위쪽에 전부 도달
-            if (player.x > stairs.x + stairs.width / 2):
+            end =  (player.x > stairs.x - stairs.move_x + stairs.width / 2 )\
+                   or (player.y - player.height  > stairs.y - stairs.move_y / 2 + stairs.height / 2 )
+            if (end ):
                 player.x, player.y = stairs.get_top_point()
                 player.y += player.height / 2
 
@@ -23,7 +25,9 @@ class Collision:
                 player.Stairs_Can_Down = True
                 player.Up = False
         elif(player.Stairs_Move and player.Down):
-            if (player.x < stairs.x - stairs.width / 2):
+            end = (player.x < stairs.x - stairs.move_x -  stairs.width / 2)\
+                  or (player.y - player.height / 2 < stairs.y - stairs.move_y - stairs.height / 2)
+            if( end ):
                 player.x, player.y = stairs.get_bottom_point()
                 player.y += player.height / 2
 
@@ -35,7 +39,6 @@ class Collision:
         pass
 
     def handle_events(self, event, player, stairs):
-
         if event.key == SDLK_UP and player.Stairs_Can_Up:
             player.x , player.y = stairs.get_bottom_point()
             player.y += player.height/2
