@@ -18,7 +18,7 @@ def exit():
     del(image)
 
 
-def update():
+def update(frame_time):
     global logo_time
 
     if(logo_time > 1.0):
@@ -27,8 +27,7 @@ def update():
         game_framework.change_state(title_state)
         #push_state 하면 pause가 실행 (갔다 올 때)
         #change_state 하면 exit가 실행 (내용 저장할 필요 없을 때)
-    delay(0.01)
-    logo_time += 0.01
+    logo_time += 0.5
 
 
 def draw():
@@ -39,7 +38,7 @@ def draw():
 
 
 
-def handle_events():
+def handle_events(frame_time):
     events = get_events()
     pass
 

@@ -4,8 +4,7 @@ import random
 from pico2d import *
 
 #만듬
-import Game
-
+from play import Game
 from Framwork import game_framework
 
 name = "MainState"
@@ -29,7 +28,7 @@ def pause():
 def resume():
     pass
 
-def handle_events():
+def handle_events(frame_time):
     events = get_events()
 
     for event in events:
@@ -44,8 +43,8 @@ def handle_events():
             pass
     pass
 
-def update():
-    game.update()
+def update(frame_time):
+    game.update(frame_time)
     pass
 
 
