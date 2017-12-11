@@ -7,16 +7,18 @@ from play import Game
 
 name = "Collision"
 #부딪히는 것 체크만 한다.
+player = None
 
 class Collision:
     def __init__(self):
         self.stairs_move_index = -1
         self.collide_treasure_index = -1
+
+        global player
+        player = Game.player
         pass
 
     def update(self):
-        player = Game.player
-
         #경비원과 플레이어 부딪힘
         #경비원이 플레이어를 보았다
         for index in range (0, Game.map.get_guard_len()):
@@ -82,24 +84,10 @@ class Collision:
         pass
 
     def handle_events(self, event):
-        player = Game.player
-
-        if event.key == SDLK_UP and player.Stairs_Can_Up:
-
-            pass
-        elif event.key == SDLK_UP and player.Stairs_Move:
-
-            pass
-
-        elif event.key == SDLK_DOWN and player.Stairs_Can_Down:
-            pass
-        elif event.key == SDLK_DOWN and player.Stairs_Move:
-            pass
+        pass
 
     def collide_bottom(self, index):
         #계단 아랫부분
-
-        player = Game.player
         if player.Stairs_Move: return False
         b = Game.map.get_stairs(index)
 
@@ -116,8 +104,6 @@ class Collision:
 
     def collide_top(self, index):
         #계단 윗부분 (포인트로 판단)
-
-        player = Game.player
         if player.Stairs_Move: return False
         t = Game.map.get_stairs(index)
 
@@ -135,7 +121,6 @@ class Collision:
         #아래에 있다
         for index in range (0, Game.map.get_stairs_len()):
             if(self.collide_bottom(index)):
-                player = Game.player
                 stair = Game.map.get_stairs(index)
                 player.Set_stairsPoint(stair.get_top_point(), stair.get_bottom_point())
                 player.Stairs_Can_Up = True
@@ -144,7 +129,6 @@ class Collision:
                 return
             #  위에 있다
             elif(self.collide_top(index)):
-                player = Game.player
                 stair = Game.map.get_stairs(index)
                 player.Set_stairsPoint(stair.get_top_point(), stair.get_bottom_point())
                 player.Stairs_Can_Up = False
@@ -152,16 +136,13 @@ class Collision:
                 self.stairs_move_index = index
                 return
 
-        player = Game.player
         player.Stairs_Can_Down = False
         player.Stairs_Can_Up = False
         pass
 
     def player_treasure_collision(self):
-        player = Game.player
         for index in range(0, Game.map.get_treasure_len()):
             if self.collide_treasure(index):
-                print("상자와 부딪힘")
                 player.Treasure_Can_Open = True
                 self.collide_treasure_index = index
                 return
@@ -170,7 +151,6 @@ class Collision:
         pass
 
     def collide_see_guard(self, index):
-        player = Game.player
         if(player.state == player.ANI_CHANGE): return False
 
         guard = Game.map.get_guard(index)
@@ -185,7 +165,6 @@ class Collision:
         return True
 
     def collide_treasure(self, index):
-        player = Game.player
         if (player.state == player.ANI_CHANGE): return False
 
         treasure = Game.map.get_treasure(index)

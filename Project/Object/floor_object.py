@@ -10,7 +10,7 @@ name = "Floor"
 class Floor:
     def __init__(self):
         self.name = None
-        self.image = load_image('샘플 바닥.png')
+        self.image = load_image('Image/샘플 바닥.png')
         self.width = 800
         self.height = 90
         self.x = self.width / 2

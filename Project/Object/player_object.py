@@ -3,11 +3,7 @@ import os
 import random
 from pico2d import *
 
-from Property import coordination
-from Property import anistate
-
 name = "Player"
-
 
 class Player:
     font = None
@@ -23,10 +19,8 @@ class Player:
     RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
     # 한번 액션하는데 걸리는 시간 , 초
-    TIME_PER_ACTION = 0.5
 
     # 액션 속도
-    ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
     FRAME_PER_ACTION = 2
 
     #ANIMAITON
@@ -38,8 +32,11 @@ class Player:
     ANI_CHANGE = 5
 
     def __init__(self):
+        self.TIME_PER_ACTION = 0.5
+        self.ACTION_PER_TIME = 1.0 / self.TIME_PER_ACTION
+
         if Player.image == None:
-            Player.image = load_image('2Dplayer_sprite_2.png')
+            Player.image = load_image('Image/2Dplayer_sprite.png')
         if Player.font == None:
             Player.font = load_font('ENCR10B.TTF',16)
         if Player.position_font == None:
@@ -116,8 +113,8 @@ class Player:
 
         distance = Player.RUN_SPEED_PPS * frame_time
         self.total_frames += \
-            Player.FRAME_PER_ACTION * Player.ACTION_PER_TIME * frame_time
-        self.frame = int(self.total_frames) % 2
+            self.FRAME_PER_ACTION * self.ACTION_PER_TIME * frame_time
+        self.frame = int(self.total_frames) % 8
 
         self.runningFunc()
 
@@ -190,6 +187,7 @@ class Player:
             z = 122 #달리기
             x = 120 #둔갑술
             if event.key == z :
+                self.TIME_PER_ACTION = 2
                 self.Run = True
             if event.key == x:
                 if(self.state != self.ANI_STAND): return
@@ -243,6 +241,8 @@ class Player:
             z = 122
             x = 120
             if event.key == z:
+
+                self.TIME_PER_ACTION = 0.5
                 self.Run = False
             if event.key == x:
                 if self.Stairs_Move: return

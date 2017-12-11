@@ -20,7 +20,6 @@ class Map:
         self.guard_group = self.create_guard()
         self.treasure_group = self.create_treasure()
 
-
         pass
 
     def create_floor(self):

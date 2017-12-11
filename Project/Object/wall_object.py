@@ -6,7 +6,7 @@ from pico2d import *
 class Wall:
     def __init__(self):
 
-        self.image = load_image('샘플 벽.png')
+        self.image = load_image('Image/샘플 벽.png')
         self.width = 1600
         self.height = 880
         self.x = self.width / 2

@@ -10,7 +10,7 @@ class Treasure:
 
     def __init__(self):
         if(self.image == None):
-            self.image = load_image('샘플 상자.png')
+            self.image = load_image('Image/샘플 상자.png')
         self.width = 100
         self.height = 100
 

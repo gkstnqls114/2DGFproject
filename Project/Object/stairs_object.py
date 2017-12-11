@@ -12,7 +12,7 @@ class Stairs:
 
     def __init__(self):
         if self.image == None:
-            self.image = load_image('2Dstairs_2.png')
+            self.image = load_image('Image/2Dstairs_2.png')
 
         self.name = None
         self.x = 300

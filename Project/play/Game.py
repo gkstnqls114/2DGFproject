@@ -37,12 +37,13 @@ class Game:
         global collisionManager, cameraManager
         global map
 
+        map = map_object.Map()
         player = player_object.Player()
         wall = wall_object.Wall()
+
         collisionManager = collision_manager.Collision()
         cameraManager = camera_manager.Camera()
 
-        map = map_object.Map()
 
         pass
 
