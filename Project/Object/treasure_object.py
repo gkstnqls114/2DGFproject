@@ -8,35 +8,39 @@ class Treasure:
 
     CLOSE, OPEN = 0, 1
 
-    def __init__(self):
+    def __init__(self, bg):
         if(self.image == None):
             self.image = load_image('Image/샘플 상자.png')
         self.width = 100
         self.height = 100
+        self.background = bg
 
         #상대적인 카메라 위치
         self.x = self.width / 2
         self.y = 90 + self.height / 2
-        self.move_x = 0
-        self.move_y = 0
 
         self.state = self.CLOSE
         self.floor_num = 1
 
     def draw(self):
+
         self.image.clip_draw(0, self.state * self.height, self.width, self.height,
-                             self.x - self.move_x, self.y - self.move_y)
+                             self.x - self.background.window_left,
+                             self.y - self.background.window_bottom)
         self.draw_bb()
         pass
 
 
-    def moveX(self, dir):
-        self.move_x += dir
-        pass
+    def update(self, frame_time):
+        min_y = 0
+        self.y = clamp(min_y,
+                       self.y,
+                       self.background.height)
 
-    def moveY(self, dir):
-        self.move_y += dir
-
+        min_x = 0
+        self.x = clamp(min_x,
+                       self.x,
+                       self.background.width)
 
     def open_box(self):
         self.state = self.OPEN
@@ -44,14 +48,14 @@ class Treasure:
 
 
     def get_bb(self):
-        return  self.x - self.width /2 - self.move_x,\
-                 self.y - self.height / 2 - self.move_y,\
-                 self.x + self.width / 2  - self.move_x,\
-                 self.y + self.height / 2 - self.move_y
+        return  self.x  - self.background.window_left - self.width /2 ,\
+                 self.y  - self.background.window_bottom - self.height / 2,\
+                 self.x  - self.background.window_left+ self.width / 2 ,\
+                 self.y  - self.background.window_bottom + self.height / 2
 
 
     def get_point(self):
-        return self.x , self.y - self.height / 2
+        return self.x  - self.background.window_left, self.y  - self.background.window_bottom- self.height / 2
 
     def draw_bb(self):
         draw_rectangle(*self.get_bb())

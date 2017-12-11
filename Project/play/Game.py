@@ -15,14 +15,14 @@ from Scene import title_state
 from Object import player_object
 from Object import guard_object
 from Object import map_object
-from Object import wall_object
+from Object import background_object
 
 name = "Game"
 
 player = None
 
 map = None
-wall = None
+background = None
 font = None
 
 collisionManager = None
@@ -33,13 +33,14 @@ class Game:
         pass
 
     def enter(self):
-        global player,  wall
+        global player,  background
         global collisionManager, cameraManager
         global map
 
-        map = map_object.Map()
-        player = player_object.Player()
-        wall = wall_object.Wall()
+        background = background_object.Background()
+        map = map_object.Map(background)
+        player = player_object.Player(background)
+        background.set_center_object(player)
 
         collisionManager = collision_manager.Collision()
         cameraManager = camera_manager.Camera()
@@ -67,13 +68,14 @@ class Game:
 
     def update(self, frame_time):
         player.update(frame_time)
+        background.update(frame_time)
         map.update(frame_time)
         collisionManager.update()
-        cameraManager.update()
+        #cameraManager.update()
 
 
     def draw_scene(self):
-        wall.draw()
+        background.draw()
         map.draw()
         player.draw()
 

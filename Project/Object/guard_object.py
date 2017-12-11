@@ -32,21 +32,18 @@ class Guard:
     ANI_STAIRS_MOVE_UP = 3
     ANI_STAIRS_MOVE_DOWN = 4
 
-    def __init__(self):
+    def __init__(self, bg):
         if Guard.image == None:
             Guard.image = load_image('Image/샘플 경비원.png')
         if Guard.font == None:
             Guard.font = load_font('ENCR10B.TTF',16)
+        self.background = bg
 
         self.name = None
         self.width = 70
         self.height = 90
         self.x = 500
         self.y = 50 + 85
-        self.Map_x = self.x
-        self.Map_y = self.y
-        self.move_x = 0
-        self.move_y = 0
 
         self.frame = 0
         self.total_frames =0.0
@@ -81,6 +78,17 @@ class Guard:
         self.runningTime = 0
         self.pause = (self.x, self.y, self.frame, self.dir)
 
+    def MoveInBackground(self):
+        min_y = 0
+        self.y = clamp(min_y,
+                       self.y,
+                       self.background.height)
+
+        min_x = 0
+        self.x = clamp(min_x,
+                       self.x,
+                       self.background.width)
+
     def update(self, frame_time):
         distance = Guard.RUN_SPEED_PPS * frame_time
         self.total_frames += \
@@ -89,45 +97,44 @@ class Guard:
 
         self.runningFunc()
 
+
+
         if(self.SeePlayer):
             self.follow_player()
             pass
         else:
-            if(self.Map_x + self.width / 2 > 1600):
+            if(self.x + self.width / 2 > self.background.width):
                 self.Right = False
                 self.Left = True
 
-            if (self.Map_x - self.width / 2 < 0):
+            if (self.x - self.width / 2 < 0):
                 self.Right = True
                 self.Left = False
 
 
         if (self.Up):
-            self.move_y += self.dir
-            self.move_x += self.dir
-            self.Map_x += self.dir
-            self.Map_y += self.dir
+            self.y += self.dir
+            self.x += self.dir
+            self.MoveInBackground()
         if (self.Down):
-            self.move_y -= self.dir
-            self.move_x -= self.dir
-            self.Map_x += self.dir
-            self.Map_y += self.dir
+            self.y -= self.dir
+            self.x -= self.dir
+            self.MoveInBackground()
 
         if(self.Up or self.Down): return
         if (self.Right):
-            self.move_x += self.dir
-            self.Map_x += self.dir
+            self.x += self.dir
+            self.MoveInBackground()
         if (self.Left):
-            self.move_x -= self.dir
-            self.Map_x -= self.dir
-
+            self.x -= self.dir
+            self.MoveInBackground()
 
     def moveX(self, dir):
-        self.move_x += dir
+        self.x += dir
         pass
 
     def moveY(self, dir):
-        self.move_y += dir
+        self.y += dir
         pass
 
 
@@ -154,10 +161,10 @@ class Guard:
 
             pass
 
-        if (self.Map_x + self.width / 2 > 1600):
+        if (self.x + self.width / 2 > 1600):
             self.playerState = self.ANI_LEFT
 
-        if (self.Map_x - self.width / 2 < 0):
+        if (self.x - self.width / 2 < 0):
             self.playerState = self.ANI_RIGHT
 
         if (self.SeePlayerTime == 0):
@@ -167,13 +174,13 @@ class Guard:
 
     def draw(self):
         #self.image.clip_draw(self.frame * 100, 0, 100, 100, self.x, self.y)
-        self.image.draw( self.x + self.move_x, self.y + self.move_y)
+        self.image.draw( self.x  - self.background.window_left, self.y  - self.background.window_bottom)
 
         self.draw_bb()
 
         if(self.SeePlayer):
-            Guard.font.draw(self.x + self.move_x - 35 ,
-                            self.y + self.move_y + 50, 'Time %d' %(self.SeePlayerTime))
+            Guard.font.draw(self.x  - 35 ,
+                            self.y  + 50, 'Time %d' %(self.SeePlayerTime))
         else:
             pass
 
@@ -221,10 +228,10 @@ class Guard:
             self.dir = 1
 
     def get_bb(self):
-        return  self.x - self.width /2 + self.move_x,\
-                 self.y - self.height / 2 + self.move_y,\
-                 self.x + self.width / 2  + self.move_x,\
-                 self.y + self.height / 2 + self.move_y
+        return  self.x  - self.background.window_left- self.width /2 ,\
+                 self.y  - self.background.window_bottom- self.height / 2,\
+                 self.x  - self.background.window_left+ self.width / 2,\
+                 self.y  - self.background.window_bottom+ self.height / 2
         pass
 
     def get_see_bb(self):
@@ -236,31 +243,29 @@ class Guard:
         pass
 
     def get_right_bb(self):
-        return  self.x - self.width /2 + 20 + self.move_x,\
-                 self.y - self.height / 2 + self.move_y,\
-                 self.x + self.width + 100  + self.move_x,\
-                 self.y + self.height / 2 + self.move_y
+        return  self.x  - self.background.window_left - self.width /2 + 20 ,\
+                 self.y  - self.background.window_bottom- self.height / 2 ,\
+                 self.x  - self.background.window_left+ self.width + 100,\
+                 self.y  - self.background.window_bottom + self.height / 2
         pass
 
     def get_left_bb(self):
-        return  self.x - self.width - 100 + self.move_x,\
-                 self.y - self.height / 2 + self.move_y,\
-                 self.x + self.width / 2 - 20  + self.move_x,\
-                 self.y + self.height / 2 + self.move_y
+        return  self.x - self.background.window_left- self.width - 100 ,\
+                 self.y  - self.background.window_bottom - self.height / 2 ,\
+                 self.x  - self.background.window_left+ self.width / 2 - 20 ,\
+                 self.y - self.background.window_bottom + self.height / 2
         pass
 
     def get_point(self):
-        return self.Map_x , self.Map_y - self.height / 2
+        return self.x - self.background.window_left , self.y - self.background.window_bottom
 
 
     def get_point_x(self):
-        #pivot return
-
-        return self.Map_x
+        return self.x - self.background.window_left
         pass
 
     def get_point_y(self):
-        return self.Map_y - self.height / 2
+        return self.y - self.background.window_bottom
         pass
 
     def draw_bb(self):

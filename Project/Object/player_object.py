@@ -31,10 +31,7 @@ class Player:
     ANI_STAIRS_MOVE_DOWN = 4
     ANI_CHANGE = 5
 
-    def __init__(self):
-        self.TIME_PER_ACTION = 0.5
-        self.ACTION_PER_TIME = 1.0 / self.TIME_PER_ACTION
-
+    def __init__(self, bg):
         if Player.image == None:
             Player.image = load_image('Image/2Dplayer_sprite.png')
         if Player.font == None:
@@ -44,25 +41,23 @@ class Player:
         if Player.treasure_font == None:
             Player.treasure_font = load_font('ENCR10B.TTF', 16)
 
+        self.background = bg
+
+        self.TIME_PER_ACTION = 0.5
+        self.ACTION_PER_TIME = 1.0 / self.TIME_PER_ACTION
+
         self.width = 90
         self.height = 110
 
         #플레이어 카메라상 좌표
-        #self.XY = coordination.Coordination(100, 50 + 90)
         self.x = 100
         self.y = 50 + 90
-
-
-        #플레이어 맵상 좌표
-        self.Map_x = self.x
-        self.Map_y = self.y
 
         self.frame = 0
         self.dir = 4
         self.state = 0
 
         self.total_frames = 0.0
-
 
         #움직임 bool
         self.Run = False
@@ -83,6 +78,7 @@ class Player:
         self.Treasure_Can_Open = False
         self.Treasure_Search = False
         self.treasure_num = 0
+
         # 은신술
         self.Change = False
 
@@ -106,6 +102,20 @@ class Player:
                     self.stairPoint[3]))
         pass
 
+    def MoveInBackground(self):
+        print("수정전: ", self.x, " " , self.y)
+
+        self.y = clamp(0,
+                       self.y,
+                       self.background.height)
+
+
+        self.x = clamp(0,
+                       self.x,
+                       self.background.width)
+
+        print("수정후: ", self.x, " ", self.y)
+
     def update(self, frame_time):
         if(self.Change):
             self.state = self.ANI_CHANGE
@@ -113,67 +123,50 @@ class Player:
 
         distance = Player.RUN_SPEED_PPS * frame_time
         self.total_frames += \
-            self.FRAME_PER_ACTION * self.ACTION_PER_TIME * frame_time
+            Player.FRAME_PER_ACTION * self.ACTION_PER_TIME * frame_time
         self.frame = int(self.total_frames) % 8
 
         self.runningFunc()
 
-        wall_last = 1600
-        if(self.Map_x + self.width / 2 > wall_last):
-            self.x = 800 - self.width / 2
-            self.Map_x = 1600 - self.width / 2
-            print("안돼", self.Map_x, "   ", self.x)
-            return
-
-        wall_first = 0
-        if (self.Map_x - self.width / 2 < wall_first):
-            self.x = 0 + self.width / 2
-            self.Map_x = 0 + self.width / 2
-            print("안돼", self.Map_x, "   ", self.x)
-            return
+        self.MoveInBackground()
 
         if(self.Up):
             self.state = self.ANI_STAIRS_MOVE_UP
             self.y += self.dir
             self.x += self.dir
-            self.Map_x += self.dir
-            self.Map_y += self.dir
         if (self.Down):
             self.state = self.ANI_STAIRS_MOVE_DOWN
             self.y -= self.dir
             self.x -= self.dir
-            self.Map_x -= self.dir
-            self.Map_y -= self.dir
 
         if(self.Stairs_Move): return
         if (self.Right):
             self.state = self.ANI_RIGHT
             self.x += self.dir
-            self.Map_x += self.dir
         if (self.Left):
             self.state = self.ANI_LEFT
             self.x -= self.dir
-            self.Map_x -= self.dir
 
     def draw(self):
         self.image.clip_draw(self.frame * self.width, self.state * self.height,\
-                             self.width, self.height,\
-                             self.x , self.y)
+                             self.width, self.height, \
+                             self.x - self.background.window_left,\
+                             self.y - self.background.window_bottom)
         #self.image.draw( self.x, self.y)
         self.draw_bb()
 
         if(self.Stairs_Can_Up):
-            Player.font.draw(self.x - 35, self.y + 50, 'Can_Up')
+            Player.font.draw(self.x  - self.background.window_left - 35, self.y  - self.background.window_bottom+ 50, 'Can_Up')
         elif(self.Stairs_Can_Down):
-            Player.font.draw(self.x - 35, self.y + 50, 'Can_Down')
+            Player.font.draw(self.x - self.background.window_left- 35, self.y  - self.background.window_bottom+ 50, 'Can_Down')
         elif( self.Stairs_Move):
-            Player.font.draw(self.x - 35 , self.y + 50, 'Stairs_Move')
+            Player.font.draw(self.x  - self.background.window_left- 35 , self.y  - self.background.window_bottom+ 50, 'Stairs_Move')
         elif (self.Treasure_Can_Open):
-            Player.font.draw(self.x - 35 , self.y + 50, 'Treasure_Can_Open')
+            Player.font.draw(self.x  - self.background.window_left- 35 , self.y  - self.background.window_bottom+ 50, 'Treasure_Can_Open')
 
 
-        Player.position_font.draw(self.x - 50, self.y -60, "FLOOR: %d" %(self.floor_at_present))
-        Player.treasure_font.draw(self.x - 50, self.y - 80, "Get: %d" %(self.treasure_num))
+        Player.position_font.draw(self.x  - self.background.window_left- 50, self.y  - self.background.window_bottom-60, "FLOOR: %d" %(self.floor_at_present))
+        Player.treasure_font.draw(self.x  - self.background.window_left- 50, self.y  - self.background.window_bottom- 80, "Get: %d" %(self.treasure_num))
         #print(self.x , " , " , self.y , " , " ,  self.Map_x , " , ", self.Map_y)
 
 
@@ -223,9 +216,12 @@ class Player:
                 self.state = self.ANI_STAIRS_MOVE_UP
             elif event.key == SDLK_DOWN and self.Stairs_Can_Down:
                 if (self.Change): return
+                print("윗부분 위치는...")
+                print(self.stairPoint[0], ", ", self.stairPoint[1])
                 self.x = self.stairPoint[0]
                 self.y = self.stairPoint[1]
                 self.y += self.height / 2
+
                 self.stairs_down()
                 self.state = self.ANI_STAND
                 self.floor_at_present -= 1
@@ -306,47 +302,29 @@ class Player:
 
 
     def get_bb(self):
-        left_player = self.x - self.width / 2
-        bottom_player = self.y - self.height /2
-        right_player = self.x + self.width / 2
-        top_player = self.y + self.width / 2
+        left_player = self.x - self.background.window_left - self.width / 2
+        bottom_player = self.y - self.background.window_bottom - self.height /2
+        right_player = self.x  - self.background.window_left + self.width / 2
+        top_player = self.y - self.background.window_bottom + self.width / 2
         return left_player, bottom_player, right_player, top_player
 
     def get_point(self):
         #pivot return
-        pivot_x = self.x
-        pivot_y = self.y - self.height / 2
+        pivot_x = self.x - self.background.window_left
+        pivot_y = self.y - self.background.window_bottom - self.height / 2
         return pivot_x, pivot_y
-
-
-    def get_pointX(self):
-        #pivot return
-        pivot_x = self.x
-        return pivot_x
-
-    def get_pointY(self):
-        #pivot return
-        pivot_y = self.y - self.height / 2
-        return pivot_y
 
     def draw_bb(self):
         draw_rectangle(*self.get_bb())
 
-    def Set_stairsPoint(self, top, bottom):
+    def Set_stairsPoint(self, topx, topy, bottomx, bottomy):
         if(len(self.stairPoint) == 4):
             self.Reset_stairsPoint()
 
-        #val은 튜플로 받는다
-        topX = top[0]
-        topY = top[1]
-        bottomX = bottom[0]
-        bottomY = bottom[1]
-        self.stairPoint.append(topX)
-        self.stairPoint.append(topY)
-        self.stairPoint.append(bottomX)
-        self.stairPoint.append(bottomY)
-        #내가 원하는 것
-        #stairPoint = [topX, topY, bottomX, bottomY]
+        self.stairPoint.append(topx)
+        self.stairPoint.append(topy)
+        self.stairPoint.append(bottomx)
+        self.stairPoint.append(bottomy)
 
         pass
 
@@ -363,27 +341,11 @@ class Player:
 
         pass
 
-    def Reach_Top(self):
-
-        if not self.Stairs_Move: return False
-        if not self.Up: return False
-
-        print ("%d < %d" %(self.get_pointX(), self.stairPoint[0]))
-        print ("%d < %d" % (self.get_pointY(), self.stairPoint[1]))
-
-        if self.get_pointX() < self.stairPoint[0]: return False
-        if self.get_pointY() < self.stairPoint[1]: return False
-
-
-        return True
-
-        pass
-
     def Reach_Bottom(self):
         if not self.Stairs_Move: return False
         if not self.Down: return False
-        if self.get_pointX() > self.stairPoint[2]: return False
-        if self.get_pointY() > self.stairPoint[3]: return False
+        if self.get_point()[0] > self.stairPoint[2]: return False
+        if self.get_point()[1] > self.stairPoint[3]: return False
 
         return True
 

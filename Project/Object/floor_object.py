@@ -8,9 +8,9 @@ from pico2d import *
 name = "Floor"
 
 class Floor:
-    def __init__(self):
+    def __init__(self, bg):
         self.name = None
-        self.image = load_image('Image/샘플 바닥.png')
+        self.image = load_image('Image/Floor.png')
         self.width = 800
         self.height = 90
         self.x = self.width / 2
@@ -19,13 +19,19 @@ class Floor:
         self.move_y = 0
         self.floor_num = 1
 
+        self.background = bg
+
+
+    def update(self, frame_time):
+        self.y = clamp(0,
+                      self.y,
+                      self.background.height)
+
+        self.x = clamp(0,
+                       self.x,
+                       self.background.width)
+
     def draw(self):
-        self.image.draw(self.x - self.move_x, self.y - self.move_y,self.width, self.height)
-
-    def moveX(self, dir):
-        self.move_x += dir
-        pass
-
-    def moveY(self, dir):
-        self.move_y += dir
+        self.image.draw( self.x - self.background.window_left,
+                         self.y - self.background.window_bottom)
 

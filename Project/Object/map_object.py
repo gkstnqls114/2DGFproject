@@ -3,7 +3,7 @@ import os
 import random
 from pico2d import *
 
-from Object import wall_object
+from Object import background_object
 from Object import floor_object
 from Object import stairs_object
 from Object import treasure_object
@@ -13,16 +13,16 @@ from Object import guard_object
 name = "Map"
 
 class Map:
-    def __init__(self):
+    def __init__(self, background):
         self.floor_height = 0
-        self.floor_group = self.create_floor()
-        self.stairs_group = self.create_stairs()
-        self.guard_group = self.create_guard()
-        self.treasure_group = self.create_treasure()
+        self.floor_group = self.create_floor(background)
+        self.stairs_group = self.create_stairs(background)
+        self.guard_group = self.create_guard(background)
+        self.treasure_group = self.create_treasure(background)
 
         pass
 
-    def create_floor(self):
+    def create_floor(self,background):
         #파일을 받아 플로어 생성
         floor_data_file = open('floor_data_text.txt', 'r')
         floor_data = json.load(floor_data_file)
@@ -30,7 +30,7 @@ class Map:
 
         floor_group = []
         for name in floor_data:
-            floor = floor_object.Floor()
+            floor = floor_object.Floor(background)
             floor.name = name
             floor.floor_num = floor_data[name]['floor_num']
             floor.y = (floor.floor_num - 1) * 300 + floor.height / 2
@@ -41,7 +41,7 @@ class Map:
 
         return floor_group
         pass
-    def create_stairs(self):
+    def create_stairs(self, background):
         #파일을 받아 계단 생성
         stairs_data_file = open('stairs_data_text.txt', 'r')
         stairs_data = json.load(stairs_data_file)
@@ -49,7 +49,7 @@ class Map:
 
         stairs_group = []
         for name in stairs_data:
-            stairs = stairs_object.Stairs()
+            stairs = stairs_object.Stairs(background)
             stairs.name = name
             stairs.floor_num = stairs_data[name]['floor_num']
             stairs.x = stairs_data[name]['x']
@@ -60,7 +60,7 @@ class Map:
 
         return stairs_group
         pass
-    def create_guard(self):
+    def create_guard(self, background):
         # 파일을 받아 경비원 생성
         guard_data_file = open('guard_data_text.txt', 'r')
         guard_data = json.load(guard_data_file)
@@ -68,7 +68,7 @@ class Map:
 
         guard_group = []
         for name in guard_data:
-            guard = guard_object.Guard()
+            guard = guard_object.Guard(background)
             guard.name = name
             guard.x = guard_data[name]['x']
             guard.Map_x = guard.x
@@ -79,7 +79,7 @@ class Map:
 
         return guard_group
         pass
-    def create_treasure(self):
+    def create_treasure(self, background):
         # 파일을 받아 경비원 생성
         treasure_data_file = open('treasure_data_text.txt', 'r')
         treasure_data = json.load(treasure_data_file)
@@ -87,7 +87,7 @@ class Map:
 
         treasure_group = []
         for name in treasure_data:
-            treasure = treasure_object.Treasure()
+            treasure = treasure_object.Treasure(background)
             treasure.name = name
             treasure.x = treasure_data[name]['x']
             treasure.floor_num = treasure_data[name]['floor_num']
@@ -134,29 +134,14 @@ class Map:
         for guard in self.guard_group:
             guard.update(frame_time)
             pass
-        pass
-
-    def moveX(self, dir):
-        #for floor in self.floor_group:
-        #    floor.moveX(dir)
-        for stairs in self.stairs_group:
-            stairs.moveX(dir)
-        for treasure in self.treasure_group:
-            treasure.moveX(dir)
-        for guard in self.guard_group:
-            guard.moveX(-dir)
-
-        pass
-
-    def moveY(self, dir):
         for floor in self.floor_group:
-            floor.moveY(dir)
-        for stairs in self.stairs_group:
-            stairs.moveY(dir)
-        for treasure in self.treasure_group:
-            treasure.moveY(dir)
-        for guard in self.guard_group:
-            guard.moveY(-dir)
+            floor.update(frame_time)
             pass
-
+        for treasure in self.treasure_group:
+            treasure.update(frame_time)
+            pass
+        for stairs in self.stairs_group:
+            stairs.update(frame_time)
+            pass
         pass
+

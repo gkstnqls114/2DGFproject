@@ -8,6 +8,7 @@ from play import Game
 name = "Collision"
 #부딪히는 것 체크만 한다.
 player = None
+map = None
 
 class Collision:
     def __init__(self):
@@ -28,9 +29,9 @@ class Collision:
                 guard.SeePlayerTime = 1000
                 guard.playerFloor = player.floor_at_present
 
-                if(player.Map_x < guard.Map_x):
+                if(player.x < guard.x):
                     guard.playerState = guard.ANI_LEFT
-                if(player.Map_x > guard.Map_x):
+                if(player.x > guard.x):
                     guard.playerState = guard.ANI_RIGHT
             pass
 
@@ -39,29 +40,36 @@ class Collision:
 
         if(player.Stairs_Move):
             stairs = Game.map.get_stairs(self.stairs_move_index)
-            player.Set_stairsPoint(stairs.get_top_point(), stairs.get_bottom_point())
 
-        if(player.Reach_Top()):
+        if(self.Reach_Top()):
             # 올라가다가 계단 위쪽에 전부 도달
-            stairs = Game.map.get_stairs(self.stairs_move_index)
-            player.x, player.y = stairs.get_top_point()
-            player.y += player.height / 2
 
-            player.Reset_stairsPoint()
+            stairs = Game.map.get_stairs(self.stairs_move_index)
+            fix_x = stairs.get_top_point()[0] + stairs.background.window_left
+            fix_y = stairs.get_top_point()[1] + stairs.background.window_bottom
+
+            player.x = fix_x
+            player.y = fix_y + player.height / 2
+
             player.Stairs_Move = False
             player.Stairs_Can_Up = False
             player.Stairs_Can_Down = True
             player.Up = False
             player.state = player.ANI_STAND
             pass
-        elif(player.Reach_Bottom()):
+        elif(self.Reach_Bottom()):
             print ("계단 아래 도달")
 
-            stairs = Game.map.get_stairs(self.stairs_move_index)
-            player.Reset_stairsPoint()
+            print("수정전: ", player.x, " ", player.y)
 
-            player.x, player.y = stairs.get_bottom_point()
-            player.y += player.height / 2
+            stairs = Game.map.get_stairs(self.stairs_move_index)
+            fix_x = stairs.get_bottom_point()[0] + stairs.background.window_left
+            fix_y = stairs.get_bottom_point()[1] + stairs.background.window_bottom
+
+            player.x = fix_x
+            player.y = fix_y + player.height / 2
+
+            print("수정전: ", player.x, " ", player.y)
 
             player.Stairs_Move = False
             player.Stairs_Can_Up = False
@@ -121,16 +129,33 @@ class Collision:
         #아래에 있다
         for index in range (0, Game.map.get_stairs_len()):
             if(self.collide_bottom(index)):
-                stair = Game.map.get_stairs(index)
-                player.Set_stairsPoint(stair.get_top_point(), stair.get_bottom_point())
+                stairs = Game.map.get_stairs(index)
+
+                fix_top_x = stairs.get_top_point()[0] + stairs.background.window_left
+                fix_top_y = stairs.get_top_point()[1] + stairs.background.window_bottom
+                fix_bottom_x = stairs.get_bottom_point()[0] + stairs.background.window_left
+                fix_bottom_y = stairs.get_bottom_point()[1] + stairs.background.window_bottom
+
+                player.Set_stairsPoint(fix_top_x,fix_top_y,  fix_bottom_x,  fix_bottom_y)
+
                 player.Stairs_Can_Up = True
                 player.Stairs_Can_Down = False
                 self.stairs_move_index = index
                 return
             #  위에 있다
             elif(self.collide_top(index)):
-                stair = Game.map.get_stairs(index)
-                player.Set_stairsPoint(stair.get_top_point(), stair.get_bottom_point())
+                stairs = Game.map.get_stairs(index)
+
+                fix_top_x = stairs.get_top_point()[0] + stairs.background.window_left
+                fix_top_y = stairs.get_top_point()[1] + stairs.background.window_bottom
+                fix_bottom_x = stairs.get_bottom_point()[0] + stairs.background.window_left
+                fix_bottom_y = stairs.get_bottom_point()[1] + stairs.background.window_bottom
+
+                print("위와 부딪힘")
+                print(fix_top_x , " ", fix_top_y ," " , fix_bottom_x ," ", fix_bottom_y)
+
+                player.Set_stairsPoint(fix_top_x,fix_top_y,  fix_bottom_x,  fix_bottom_y)
+
                 player.Stairs_Can_Up = False
                 player.Stairs_Can_Down = True
                 self.stairs_move_index = index
@@ -148,6 +173,38 @@ class Collision:
                 return
 
         player.Treasure_Can_Open = False
+        pass
+
+    def Reach_Top(self):
+        if not player.Stairs_Move: return False
+        if not player.Up: return False
+
+        stairs = Game.map.get_stairs(self.stairs_move_index)
+        stairs_x = stairs.get_top_point()[0]+ stairs.background.window_left
+        staris_y = stairs.get_top_point()[1]+ stairs.background.window_bottom
+
+        if player.x < stairs_x: return False
+        if player.y < staris_y: return False
+
+        print("윗부분 도착")
+
+
+        return True
+        pass
+
+    def Reach_Bottom(self):
+        if not player.Stairs_Move: return False
+        if not player.Down: return False
+
+        stairs = Game.map.get_stairs(self.stairs_move_index)
+        stairs_x = stairs.get_bottom_point()[0] + stairs.background.window_left
+        staris_y = stairs.get_bottom_point()[1]+ stairs.background.window_bottom
+
+        if player.x > stairs_x: return False
+        if player.y > staris_y: return False
+
+
+        return True
         pass
 
     def collide_see_guard(self, index):
