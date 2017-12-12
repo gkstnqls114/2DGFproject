@@ -19,8 +19,8 @@ class Stairs:
         self.name = None
         self.x = 300
         self.y = 125 + 110
-        self.width = 350
-        self.height = 350
+        self.width = 300
+        self.height = 300
         self.flooar_num = 1
 
     def update(self, frame_time):

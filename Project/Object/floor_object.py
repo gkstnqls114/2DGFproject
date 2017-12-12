@@ -11,8 +11,8 @@ class Floor:
     def __init__(self, bg):
         self.name = None
         self.image = load_image('Image/Floor.png')
-        self.width = 800
-        self.height = 90
+        self.width = self.image.w
+        self.height = self.image.h
         self.x = self.width / 2
         self.y =  90 + self.height / 2
         self.move_x = 0

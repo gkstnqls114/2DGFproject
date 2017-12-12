@@ -3,9 +3,10 @@ import os
 import random
 from pico2d import *
 
+
 #Manager
 from Manager import collision_manager
-from Manager import camera_manager
+from Manager import Time
 
 #Scene
 from Scene import pause_state
@@ -24,6 +25,7 @@ player = None
 map = None
 background = None
 font = None
+time = None
 
 collisionManager = None
 cameraManager = None
@@ -36,15 +38,14 @@ class Game:
         global player,  background
         global collisionManager, cameraManager
         global map
+        global time
 
         background = background_object.Background()
         map = map_object.Map(background)
         player = player_object.Player(background)
         background.set_center_object(player)
-
         collisionManager = collision_manager.Collision()
-        cameraManager = camera_manager.Camera()
-
+        time = Time.Time()
 
         pass
 
@@ -71,13 +72,14 @@ class Game:
         background.update(frame_time)
         map.update(frame_time)
         collisionManager.update()
-        #cameraManager.update()
+        time.update(frame_time)
 
 
     def draw_scene(self):
         background.draw()
         map.draw()
         player.draw()
+        time.draw()
 
 
 

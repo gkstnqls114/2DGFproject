@@ -1,5 +1,4 @@
 {
-	"Guard1" : {"x":500, "floor_num":1},
 	"Guard2" : {"x":600, "floor_num":2},
 	"Guard3" : {"x":400, "floor_num":3}
 }

@@ -26,22 +26,19 @@ class Guard:
     FRAME_PER_ACTION = 1
 
     #ANIMAITON
-    ANI_STAND = 0
-    ANI_RIGHT = 1
-    ANI_LEFT = 2
-    ANI_STAIRS_MOVE_UP = 3
-    ANI_STAIRS_MOVE_DOWN = 4
+    ANI_RIGHT = 0
+    ANI_LEFT = 1
 
     def __init__(self, bg):
         if Guard.image == None:
-            Guard.image = load_image('Image/샘플 경비원.png')
+            Guard.image = load_image('Image/guard_sprite.png')
         if Guard.font == None:
             Guard.font = load_font('ENCR10B.TTF',16)
         self.background = bg
 
         self.name = None
-        self.width = 70
-        self.height = 90
+        self.width = 90
+        self.height = 110
         self.x = 500
         self.y = 50 + 85
 
@@ -50,6 +47,7 @@ class Guard:
         self.dir = 5
 
         #움직임 bool
+        self.state = self.ANI_RIGHT
         self.Run = False
         self.Right = False
         self.Left = True
@@ -58,6 +56,7 @@ class Guard:
 
         #인식했는가 아닌가
         self.SeePlayer = False
+        self.Hp = 10
 
         #계단을 올라 가는 bool
         self.top_range = 0
@@ -71,6 +70,7 @@ class Guard:
         #플레이어를 인식한 시간
         # 0 되면 다시 리셋
         self.SeePlayerTime = 1000
+        self.recoveryTime = 100
         #플레이어의 상태
         self.playerState = -1
         self.playerFloor = -1
@@ -90,14 +90,19 @@ class Guard:
                        self.background.width)
 
     def update(self, frame_time):
+        if(self.Hp <= 0):
+            self.recoveryTime -= 1
+            if self.recoveryTime < 0:
+                self.Hp = 10
+                self.recoveryTime = 100
+            return
+
         distance = Guard.RUN_SPEED_PPS * frame_time
         self.total_frames += \
             Guard.FRAME_PER_ACTION * Guard.ACTION_PER_TIME * frame_time
-        self.frame = int(self.total_frames) % 1
+        self.frame = int(self.total_frames) % 8
 
         self.runningFunc()
-
-
 
         if(self.SeePlayer):
             self.follow_player()
@@ -112,31 +117,24 @@ class Guard:
                 self.Left = False
 
 
-        if (self.Up):
-            self.y += self.dir
-            self.x += self.dir
-            self.MoveInBackground()
-        if (self.Down):
-            self.y -= self.dir
-            self.x -= self.dir
-            self.MoveInBackground()
-
-        if(self.Up or self.Down): return
+        #if (self.Up):
+        #    self.y += self.dir
+        #    self.x += self.dir
+        #    self.MoveInBackground()
+        #if (self.Down):
+        #    self.y -= self.dir
+        #    self.x -= self.dir
+        #    self.MoveInBackground()
+#
+        #if(self.Up or self.Down): return
         if (self.Right):
+            self.state = self.ANI_RIGHT
             self.x += self.dir
             self.MoveInBackground()
         if (self.Left):
+            self.state = self.ANI_LEFT
             self.x -= self.dir
             self.MoveInBackground()
-
-    def moveX(self, dir):
-        self.x += dir
-        pass
-
-    def moveY(self, dir):
-        self.y += dir
-        pass
-
 
 
     def follow_player(self):
@@ -173,14 +171,19 @@ class Guard:
         pass
 
     def draw(self):
-        #self.image.clip_draw(self.frame * 100, 0, 100, 100, self.x, self.y)
-        self.image.draw( self.x  - self.background.window_left, self.y  - self.background.window_bottom)
+
+        self.image.clip_draw(self.frame * self.width, self.state * self.height,\
+                             self.width, self.height, \
+                             self.x - self.background.window_left,\
+                             self.y - self.background.window_bottom)
+
+        #self.image.draw( self.x  - self.background.window_left, self.y  - self.background.window_bottom)
 
         self.draw_bb()
 
         if(self.SeePlayer):
-            Guard.font.draw(self.x  - 35 ,
-                            self.y  + 50, 'Time %d' %(self.SeePlayerTime))
+            Guard.font.draw(self.x  - self.background.window_left- 35 ,
+                            self.y  - self.background.window_bottom - 100, 'Hp %d' %(self.Hp))
         else:
             pass
 

@@ -14,6 +14,7 @@ name = "Map"
 
 class Map:
     def __init__(self, background):
+        self.floor_distance = 300
         self.floor_height = 0
         self.floor_group = self.create_floor(background)
         self.stairs_group = self.create_stairs(background)
@@ -33,7 +34,7 @@ class Map:
             floor = floor_object.Floor(background)
             floor.name = name
             floor.floor_num = floor_data[name]['floor_num']
-            floor.y = (floor.floor_num - 1) * 300 + floor.height / 2
+            floor.y = (floor.floor_num - 1) * self.floor_distance + floor.height / 2
             floor_group.append(floor)
             #다른 방법 있는지 알아보기
             self.floor_height = floor.height
@@ -53,7 +54,7 @@ class Map:
             stairs.name = name
             stairs.floor_num = stairs_data[name]['floor_num']
             stairs.x = stairs_data[name]['x']
-            stairs.y = (stairs.floor_num - 1) * 300 + self.floor_height + stairs.height / 2
+            stairs.y = (stairs.floor_num - 1) * self.floor_distance - 10 + self.floor_height + stairs.height / 2
             stairs_group.append(stairs)
 
         print("완료")
@@ -73,7 +74,7 @@ class Map:
             guard.x = guard_data[name]['x']
             guard.Map_x = guard.x
             guard.floor_num = guard_data[name]['floor_num']
-            guard.y = (guard.floor_num - 1) * 300 + self.floor_height + guard.height / 2
+            guard.y = (guard.floor_num - 1) *self.floor_distance + self.floor_height + guard.height / 2
             guard.Map_y = guard.y
             guard_group.append(guard)
 
@@ -91,7 +92,7 @@ class Map:
             treasure.name = name
             treasure.x = treasure_data[name]['x']
             treasure.floor_num = treasure_data[name]['floor_num']
-            treasure.y = (treasure.floor_num - 1) * 300 + self.floor_height + treasure.height / 2
+            treasure.y = (treasure.floor_num - 1) * self.floor_distance + self.floor_height + treasure.height / 2
             treasure_group.append(treasure)
 
         return treasure_group

@@ -21,6 +21,24 @@ class Collision:
 
     def update(self):
         #경비원과 플레이어 부딪힘
+        for index in range (0, Game.map.get_guard_len()):
+            if(self.collide_guard(index)):
+                guard = Game.map.get_guard(index)
+                guard.SeePlayer = True
+                guard.SeePlayerTime = 1000
+
+                if(guard.Hp > 0):
+                    player.Aressted = True
+                    player.ArrestGuard(guard)
+                    if(player.x < guard.x):
+                        guard.playerState = guard.ANI_LEFT
+                    if(player.x > guard.x):
+                        guard.playerState = guard.ANI_RIGHT
+                return
+            else:
+                player.Aressted = False
+            pass
+
         #경비원이 플레이어를 보았다
         for index in range (0, Game.map.get_guard_len()):
             if(self.collide_see_guard(index)):
@@ -141,6 +159,7 @@ class Collision:
                 player.Stairs_Can_Up = True
                 player.Stairs_Can_Down = False
                 self.stairs_move_index = index
+
                 return
             #  위에 있다
             elif(self.collide_top(index)):
@@ -159,6 +178,7 @@ class Collision:
                 player.Stairs_Can_Up = False
                 player.Stairs_Can_Down = True
                 self.stairs_move_index = index
+
                 return
 
         player.Stairs_Can_Down = False
@@ -184,7 +204,7 @@ class Collision:
         staris_y = stairs.get_top_point()[1]+ stairs.background.window_bottom
 
         if player.x < stairs_x: return False
-        if player.y < staris_y: return False
+        if player.y - player.height /2 < staris_y: return False
 
         print("윗부분 도착")
 
@@ -201,11 +221,25 @@ class Collision:
         staris_y = stairs.get_bottom_point()[1]+ stairs.background.window_bottom
 
         if player.x > stairs_x: return False
-        if player.y > staris_y: return False
+        if player.y - player.height /2 > staris_y: return False
 
 
         return True
         pass
+
+    def collide_guard(self, index):
+        if (player.state == player.ANI_CHANGE): return False
+
+        guard = Game.map.get_guard(index)
+        left_player, bottom_player, right_player, top_player = player.get_bb()
+        left_b, bottom_b, right_b, top_b = guard.get_bb()
+        # print(left_b, " , ", bottom_b," , ", right_b, " , ", top_b)
+
+        if left_player > right_b: return False
+        if right_player < left_b: return False
+        if top_player < bottom_b: return False
+        if bottom_player > top_b: return False
+        return True
 
     def collide_see_guard(self, index):
         if(player.state == player.ANI_CHANGE): return False

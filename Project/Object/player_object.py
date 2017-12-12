@@ -3,6 +3,8 @@ import os
 import random
 from pico2d import *
 
+from Object import button_object
+
 name = "Player"
 
 class Player:
@@ -41,6 +43,9 @@ class Player:
         if Player.treasure_font == None:
             Player.treasure_font = load_font('ENCR10B.TTF', 16)
 
+        self.button = button_object.Button(bg)
+        self.button.set_player(self)
+
         self.background = bg
 
         self.TIME_PER_ACTION = 0.5
@@ -51,7 +56,7 @@ class Player:
 
         #플레이어 카메라상 좌표
         self.x = 100
-        self.y = 50 + 90
+        self.y = self.height/2 + 100
 
         self.frame = 0
         self.dir = 4
@@ -82,7 +87,11 @@ class Player:
         # 은신술
         self.Change = False
 
-        #현재 플레이어가 있는 플로어
+        #경비병에게 잡혔다
+        self.Aressted = False
+
+
+       #현재 플레이어가 있는 플로어
         self.floor_at_present = 1
 
         self.runningTime = 0
@@ -103,18 +112,13 @@ class Player:
         pass
 
     def MoveInBackground(self):
-        print("수정전: ", self.x, " " , self.y)
-
         self.y = clamp(0,
                        self.y,
                        self.background.height)
-
-
         self.x = clamp(0,
                        self.x,
                        self.background.width)
 
-        print("수정후: ", self.x, " ", self.y)
 
     def update(self, frame_time):
         if(self.Change):
@@ -130,29 +134,42 @@ class Player:
 
         self.MoveInBackground()
 
+        if (self.Aressted == True):
+            self.button.update(frame_time)
+            return
+
         if(self.Up):
             self.state = self.ANI_STAIRS_MOVE_UP
             self.y += self.dir
             self.x += self.dir
+
+            self.button.update(frame_time)
+
         if (self.Down):
             self.state = self.ANI_STAIRS_MOVE_DOWN
             self.y -= self.dir
             self.x -= self.dir
 
+            self.button.update(frame_time)
+
         if(self.Stairs_Move): return
         if (self.Right):
             self.state = self.ANI_RIGHT
             self.x += self.dir
+
+            self.button.update(frame_time)
         if (self.Left):
             self.state = self.ANI_LEFT
             self.x -= self.dir
 
+            self.button.update(frame_time)
+
     def draw(self):
+        self.button.draw()
         self.image.clip_draw(self.frame * self.width, self.state * self.height,\
                              self.width, self.height, \
                              self.x - self.background.window_left,\
                              self.y - self.background.window_bottom)
-        #self.image.draw( self.x, self.y)
         self.draw_bb()
 
         if(self.Stairs_Can_Up):
@@ -163,12 +180,15 @@ class Player:
             Player.font.draw(self.x  - self.background.window_left- 35 , self.y  - self.background.window_bottom+ 50, 'Stairs_Move')
         elif (self.Treasure_Can_Open):
             Player.font.draw(self.x  - self.background.window_left- 35 , self.y  - self.background.window_bottom+ 50, 'Treasure_Can_Open')
+        elif (self.Aressted):
+            Player.font.draw(self.x  - self.background.window_left- 35 , self.y  - self.background.window_bottom+ 50, 'Aressted')
+
+        Player.position_font.draw(self.background.canvas_width - 150, self.background.canvas_height - 50, "FLOOR: %d" %(self.floor_at_present))
+        Player.treasure_font.draw(self.background.canvas_width - 150, self.background.canvas_height - 100, "Get: %d" %(self.treasure_num))
 
 
-        Player.position_font.draw(self.x  - self.background.window_left- 50, self.y  - self.background.window_bottom-60, "FLOOR: %d" %(self.floor_at_present))
-        Player.treasure_font.draw(self.x  - self.background.window_left- 50, self.y  - self.background.window_bottom- 80, "Get: %d" %(self.treasure_num))
-        #print(self.x , " , " , self.y , " , " ,  self.Map_x , " , ", self.Map_y)
-
+    def ArrestGuard(self, guard):
+        self.guard = guard
 
 
     def handle_events(self, event):
@@ -176,31 +196,43 @@ class Player:
 
 
         if event.type == SDL_KEYDOWN:
-            a = 97
+            a = 97 #아이템 얻기
             z = 122 #달리기
             x = 120 #둔갑술
+            s = 115 #도망가기
             if event.key == z :
+                if (self.Aressted == True): return
                 self.TIME_PER_ACTION = 2
                 self.Run = True
             if event.key == x:
+                if(self.Aressted == True) : return
                 if(self.state != self.ANI_STAND): return
                 self.Change = True
             elif event.key == a:
+                if (self.Aressted == True): return
                 if not self.Treasure_Can_Open:return
                 self.Treasure_Can_Open = False
                 self.Treasure_Search = True
+            elif event.key == s:
+                if (self.Aressted == False): return
+                self.guard.Hp -= 1
+                if(self.guard.Hp <= 0):
+                    self.Aressted = False
             elif event.key == SDLK_RIGHT:
+                if (self.Aressted == True): return
                 if self.Stairs_Move: return
                 if self.Change: return
                 self.Right = True
                 self.state = self.ANI_RIGHT
             elif  event.key == SDLK_LEFT:
+                if (self.Aressted == True): return
                 if self.Stairs_Move: return
                 if self.Change: return
                 self.Left = True
                 self.state = self.ANI_LEFT
 
             if event.key == SDLK_UP and self.Stairs_Can_Up:
+                if (self.Aressted == True): return
                 if (self.Change): return
                 self.x = self.stairPoint[2]
                 self.y = self.stairPoint[3]
@@ -209,12 +241,14 @@ class Player:
                 self.state = self.ANI_STAND
                 self.floor_at_present +=1
             elif event.key == SDLK_UP and self.Stairs_Move:
+                if (self.Aressted == True): return
                 if (self.Change): return
                 if (self.state == self.ANI_STAIRS_MOVE_DOWN):
                     self.floor_at_present += 1
                 self.stairs_move_up()
                 self.state = self.ANI_STAIRS_MOVE_UP
             elif event.key == SDLK_DOWN and self.Stairs_Can_Down:
+                if (self.Aressted == True): return
                 if (self.Change): return
                 print("윗부분 위치는...")
                 print(self.stairPoint[0], ", ", self.stairPoint[1])
@@ -226,6 +260,7 @@ class Player:
                 self.state = self.ANI_STAND
                 self.floor_at_present -= 1
             elif event.key == SDLK_DOWN and self.Stairs_Move:
+                if (self.Aressted == True): return
                 if (self.Change): return
                 if(self.state == self.ANI_STAIRS_MOVE_UP):
                     self.floor_at_present -= 1
