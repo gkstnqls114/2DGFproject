@@ -1,0 +1,14 @@
+Wed Dec 13 07:45:57 2017 +0900 button
+Tue Dec 12 07:30:42 2017 +0900 scrolling
+Mon Dec 11 22:58:32 2017 +0900 image add and delete
+Wed Nov 22 00:10:50 2017 +0900 delete mp4
+Wed Nov 22 00:08:46 2017 +0900 treasure and map make
+Tue Nov 14 05:11:04 2017 +0900 camera move
+Mon Nov 13 06:17:35 2017 +0900 manager add
+Mon Nov 13 03:59:31 2017 +0900 collision add
+Wed Nov 8 04:08:16 2017 +0900 add a little
+Wed Nov 8 03:45:49 2017 +0900 stairs variable modify
+Tue Nov 7 01:30:54 2017 +0900 stairs practice - 1
+Mon Nov 6 19:59:39 2017 +0900 I make a player object a little
+Wed Nov 1 11:47:52 2017 +0900 make gitignore
+Sat Oct 28 22:48:24 2017 +0900 test

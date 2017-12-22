@@ -229,6 +229,8 @@ class Collision:
 
     def collide_guard(self, index):
         if (player.state == player.ANI_CHANGE): return False
+        if (player.state == player.ANI_STAIRS_MOVE_UP): return False
+        if (player.state == player.ANI_STAIRS_MOVE_DOWN): return False
 
         guard = Game.map.get_guard(index)
         left_player, bottom_player, right_player, top_player = player.get_bb()
