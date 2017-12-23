@@ -23,7 +23,6 @@ name = "Game"
 player = None
 
 map = None
-background = None
 font = None
 time = None
 
@@ -40,10 +39,9 @@ class Game:
         global map
         global time
 
-        background = background_object.Background()
-        map = map_object.Map(background)
-        player = player_object.Player(background)
-        background.set_center_object(player)
+        map = map_object.Map()
+        player = player_object.Player(map.background)
+        #background.set_center_object(player)
         collisionManager = collision_manager.Collision()
         time = Time.Time()
 
@@ -69,14 +67,13 @@ class Game:
 
     def update(self, frame_time):
         player.update(frame_time)
-        background.update(frame_time)
+
         map.update(frame_time)
         collisionManager.update()
         time.update(frame_time)
 
 
     def draw_scene(self):
-        background.draw()
         map.draw()
         player.draw()
         time.draw()

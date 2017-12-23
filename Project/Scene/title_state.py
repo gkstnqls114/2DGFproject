@@ -14,7 +14,7 @@ GAME_START, GAME_QUIT = 0, 1
 
 def enter():
     global image
-    image = load_image('Image/샘플 타이틀.png')
+    image = load_image('Image/title.png')
 
 
 def exit():

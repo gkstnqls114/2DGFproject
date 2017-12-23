@@ -1,0 +1,7 @@
+{
+	"Unit (cm per 1px)" : 1.6
+	"Map Width (cm)" : 2560
+	"Map Celling (cm)" : 272,
+	"Number Of Floor" : 5
+	"Floor Width (cm)" : 
+}
