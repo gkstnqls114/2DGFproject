@@ -21,11 +21,13 @@ class Map:
         if(self.background == None):
             self.background = background_object.Background()
 
-        self.floor_cell_height = 300
-        self.map_height = 0
+        self.unit = 0
         self.map_width = 0
+        self.map_height = 0
+        self.floor_cell_height = 0
         self.number_of_floor = 0
 
+        self.create_map()
 
         self.floor_group = self.create_floor()
         self.stairs_group = self.create_stairs()
@@ -35,12 +37,20 @@ class Map:
         pass
 
     def create_map(self):
+        map_data_file = open('Data/map_data_text.txt', 'r')
+        map_data = json.load(map_data_file)
+        map_data_file.close()
 
-        floor_data_file = open('Data/floor_data_text.txt', 'r')
-        floor_data = json.load(floor_data_file)
-        floor_data_file.close()
+        self.unit = map_data["Unit (cm per 1px)"]
+        self.map_width = int(map_data["Map Width (cm)"] / self.unit)
+        self.floor_cell_height = int(map_data["Map Celling (cm)"] / self.unit)
+        self.floor_width = int(map_data["Floor Width (cm)"] / self.unit)
+        self.number_of_floor =  map_data["Number Of Floor"]
+        self.map_height = int((self.floor_cell_height + self.floor_width)* self.number_of_floor)
 
-        pass
+        self.background.width = self.map_width
+        self.background.height = self.map_height
+
 
     def create_floor(self):
         #파일을 받아 플로어 생성
@@ -53,11 +63,13 @@ class Map:
             floor = floor_object.Floor(self.background)
             floor.name = name
             floor.floor_num = floor_data[name]['floor_num']
-            floor.y = (floor.floor_num - 1) * self.floor_cell_height + floor.height / 2
+            floor.height = self.floor_width
+            floor.width = self.map_width
+            floor.x = floor.width / 2
+            floor.y = (floor.floor_num - 1) * (self.floor_cell_height + self.floor_width) + self.floor_width / 2
             floor_group.append(floor)
-            #다른 방법 있는지 알아보기
-            self.floor_height = floor.height
-            # ...
+
+
 
         return floor_group
         pass
@@ -71,9 +83,13 @@ class Map:
         for name in stairs_data:
             stairs = stairs_object.Stairs(self.background)
             stairs.name = name
+            stairs.width = (self.floor_cell_height + self.floor_width)
+            stairs.height = (self.floor_cell_height + self.floor_width)
+
             stairs.floor_num = stairs_data[name]['floor_num']
             stairs.x = stairs_data[name]['x']
-            stairs.y = (stairs.floor_num - 1) * self.floor_cell_height - 10 + self.floor_height + stairs.height / 2
+            stairs.y = (stairs.floor_num - 1) * (self.floor_cell_height + self.floor_width)\
+                       + self.floor_width + stairs.height / 2 - 10
             stairs_group.append(stairs)
 
         print("완료")
@@ -93,7 +109,8 @@ class Map:
             guard.x = guard_data[name]['x']
             guard.Map_x = guard.x
             guard.floor_num = guard_data[name]['floor_num']
-            guard.y = (guard.floor_num - 1) *self.floor_cell_height + self.floor_height + guard.height / 2
+            guard.y = (guard.floor_num - 1) * (self.floor_cell_height + self.floor_width)\
+                      + self.floor_width + guard.height / 2 - 10
             guard.Map_y = guard.y
             guard_group.append(guard)
 
@@ -111,7 +128,8 @@ class Map:
             treasure.name = name
             treasure.x = treasure_data[name]['x']
             treasure.floor_num = treasure_data[name]['floor_num']
-            treasure.y = (treasure.floor_num - 1) * self.floor_cell_height + self.floor_height + treasure.height / 2
+            treasure.y = (treasure.floor_num - 1) * (self.floor_cell_height + self.floor_width)\
+                         + self.floor_width + treasure.height / 2 - 10
             treasure_group.append(treasure)
 
         return treasure_group
@@ -139,6 +157,8 @@ class Map:
         return len(self.treasure_group)
 
     def draw(self):
+        self.background.draw()
+
         for floor in self.floor_group:
             floor.draw()
         for stairs in self.stairs_group:
@@ -151,6 +171,8 @@ class Map:
         pass
 
     def update(self, frame_time):
+        self.background.update(frame_time)
+
         for guard in self.guard_group:
             guard.update(frame_time)
             pass

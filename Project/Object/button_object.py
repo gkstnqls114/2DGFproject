@@ -43,7 +43,7 @@ class Button:
 
         self.x = self.player.x
         self.y = self.player.y + self.height/2 + self.player.height/2 + 10
-        print("버튼좌표: ", self.x ," " , self.y)
+
 
     def draw(self):
         self.image.clip_draw(0, self.state * self.height,\

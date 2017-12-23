@@ -47,6 +47,7 @@ class Player:
         self.button.set_player(self)
 
         self.background = bg
+        self.background.set_center_object(self)
 
         self.TIME_PER_ACTION = 0.5
         self.ACTION_PER_TIME = 1.0 / self.TIME_PER_ACTION

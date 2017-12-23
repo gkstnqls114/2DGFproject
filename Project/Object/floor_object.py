@@ -13,11 +13,11 @@ class Floor:
         self.image = load_image('Image/Floor.png')
         self.width = self.image.w
         self.height = self.image.h
-        self.x = self.width / 2
-        self.y =  90 + self.height / 2
+        self.x = 0
+        self.y = 0
         self.move_x = 0
         self.move_y = 0
-        self.floor_num = 1
+        self.floor_num = 0
 
         self.background = bg
 
@@ -33,5 +33,7 @@ class Floor:
 
     def draw(self):
         self.image.draw( self.x - self.background.window_left,
-                         self.y - self.background.window_bottom)
+                         self.y - self.background.window_bottom,
+                         self.width,
+                         self.height)
 
