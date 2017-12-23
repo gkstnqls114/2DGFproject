@@ -10,16 +10,41 @@ image = None
 running = True
 arrow = 0
 
-GAME_START, GAME_QUIT = 0, 1
+GAME_START, GAME_HOW, GAME_QUIT = 0, 1, 2
+START = None
+EXIT = None
+HOW = None
+STARTColor = None
+EXITColor = None
+HOWColor = None
+
+SelectColor = None
+NotSelectColor = None
 
 def enter():
-    global image
+    global image, START, EXIT, HOW
+    global STARTColor, EXITColor, HOWColor
+    global SelectColor, NotSelectColor
+
     image = load_image('Image/title.png')
+    START = load_font('Font/GILSANUB.TTF', 40)
+    EXIT = load_font('Font/GILSANUB.TTF', 40)
+    HOW = load_font('Font/GILSANUB.TTF', 40)
+
+    SelectColor = [255, 0, 0]
+    NotSelectColor = [0, 0, 0]
+
+    STARTColor = SelectColor
+    HOWColor = NotSelectColor
+    EXITColor = NotSelectColor
 
 
 def exit():
-    global image
+    global image, START, EXIT, HOW
     del(image)
+    del(START)
+    del(EXIT)
+    del(HOW)
 
 
 def handle_events(frame_time):
@@ -31,38 +56,53 @@ def handle_events(frame_time):
             game_framework.quit()
         else:
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_UP):
-                if(arrow == GAME_START): arrow = GAME_QUIT
-                else: arrow -= 1
+                arrow -= 1
+                if arrow < GAME_START: arrow = GAME_QUIT
                 pass
             elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_DOWN):
                 arrow += 1
-                arrow %= 2
+                if arrow > GAME_QUIT: arrow = GAME_START
                 pass
             elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
                 if (arrow == GAME_START):
                     game_framework.change_state(main_state)
                     pass
-                if (arrow == GAME_QUIT):
+                elif (arrow == GAME_HOW):
+
+                    pass
+                elif (arrow == GAME_QUIT):
                     running = False
                     pass
                 pass
+
+    change_font_color()
+
+def change_font_color():
+    global STARTColor, EXITColor, HOWColor
+    STARTColor = NotSelectColor
+    HOWColor = NotSelectColor
+    EXITColor = NotSelectColor
+
+    if (arrow == GAME_START):
+        STARTColor = SelectColor
+    elif (arrow == GAME_HOW):
+        HOWColor = SelectColor
+    elif (arrow == GAME_QUIT):
+        EXITColor = SelectColor
 
 
 def draw():
     clear_canvas()
     image.draw(400, 300)
 
-    if(arrow == GAME_START):
-        #일단 하드코딩
-        draw_rectangle(250, 150, 270, 170)
-        pass
-    if (arrow == GAME_QUIT):
-        draw_rectangle(250, 100, 270, 120)
-        pass
+    START.draw(430, 210, 'GAME START', STARTColor)
+    HOW.draw(430, 140, 'HOW TO PLAY', HOWColor)
+    EXIT.draw(430, 70, 'EXIT', EXITColor)
 
     update_canvas()
 
 def update(frame_time):
+
     if not running:
         game_framework.quit()   #quit은 exit를 호출한다. 앞 상태의 resume을 수행한다.
 

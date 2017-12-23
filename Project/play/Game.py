@@ -41,7 +41,8 @@ class Game:
 
         map = map_object.Map()
         player = player_object.Player(map.background)
-        #background.set_center_object(player)
+        player.y = map.floor_width + player.height / 2 - 10
+
         collisionManager = collision_manager.Collision()
         time = Time.Time()
 

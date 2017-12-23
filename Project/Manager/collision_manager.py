@@ -170,7 +170,6 @@ class Collision:
                 fix_bottom_x = stairs.get_bottom_point()[0] + stairs.background.window_left
                 fix_bottom_y = stairs.get_bottom_point()[1] + stairs.background.window_bottom
 
-                print("위와 부딪힘")
                 print(fix_top_x , " ", fix_top_y ," " , fix_bottom_x ," ", fix_bottom_y)
 
                 player.Set_stairsPoint(fix_top_x,fix_top_y,  fix_bottom_x,  fix_bottom_y)
@@ -205,8 +204,6 @@ class Collision:
 
         if player.x < stairs_x: return False
         if player.y - player.height /2 < staris_y: return False
-
-        print("윗부분 도착")
 
 
         return True

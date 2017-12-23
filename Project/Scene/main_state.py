@@ -18,7 +18,9 @@ def enter():
     pass
 
 def exit():
+    global game
     game.exit()
+    del(game)
     pass
 
 

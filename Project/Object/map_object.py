@@ -54,15 +54,10 @@ class Map:
 
     def create_floor(self):
         #파일을 받아 플로어 생성
-        floor_data_file = open('Data/floor_data_text.txt', 'r')
-        floor_data = json.load(floor_data_file)
-        floor_data_file.close()
-
         floor_group = []
-        for name in floor_data:
+        for i in  range(1, self.number_of_floor):
             floor = floor_object.Floor(self.background)
-            floor.name = name
-            floor.floor_num = floor_data[name]['floor_num']
+            floor.floor_num = i
             floor.height = self.floor_width
             floor.width = self.map_width
             floor.x = floor.width / 2

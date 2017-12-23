@@ -3,10 +3,8 @@ import os
 import random
 from pico2d import *
 
-class Treasure:
+class Art:
     image = None
-
-    CLOSE, OPEN = 0, 1
 
     def __init__(self, bg):
         if(self.image == None):
@@ -16,8 +14,8 @@ class Treasure:
         self.background = bg
 
         #상대적인 카메라 위치
-        self.x = 0
-        self.y = 0
+        self.x = self.width / 2
+        self.y = 90 + self.height / 2
 
         self.state = self.CLOSE
         self.floor_num = 1
