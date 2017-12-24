@@ -12,7 +12,6 @@ name = "Time"
 class Time:
     def __init__(self):
         self.font = load_font('Font/GILSANUB.TTF',30)
-        self.font2 = load_font('Font/GILSANUB.TTF',30)
         self.startTime = time.time()
         self.elapsedTime = time.time() - self.startTime
 
@@ -42,14 +41,7 @@ class Time:
             self.seconds -= 1
 
 
-
-
-
-
-
-
     def draw(self):
         self.font.draw(10, 570, '%d : %d' %(self.minutes, self.seconds), self.color)
-        self.font.draw(10, 500, '%f' %( self.elapsedTime ))
 
 

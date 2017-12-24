@@ -239,7 +239,6 @@ class Collision:
         guard = Game.map.get_guard(index)
         left_player, bottom_player, right_player, top_player = player.get_bb()
         left_b, bottom_b, right_b, top_b = guard.get_see_bb()
-        #print(left_b, " , ", bottom_b," , ", right_b, " , ", top_b)
 
         if left_player > right_b: return False
         if right_player < left_b: return False

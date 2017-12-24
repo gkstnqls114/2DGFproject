@@ -30,14 +30,14 @@ class Button:
         self.player = player
 
     def update(self, frame_time):
-        if self.player.Stairs_Can_Down:
+        if self.player.Aressted :
+            self.state = self.ANI_S_AVOID_GUARD
+        elif self.player.Treasure_Can_Open:
+            self.state = self.ANI_A_GET_TREASURE
+        elif self.player.Stairs_Can_Down:
             self.state = self.ANI_CAN_MOVE_DOWN
         elif self.player.Stairs_Can_Up:
             self.state = self.ANI_CAN_MOVE_UP
-        elif self.player.Treasure_Can_Open:
-            self.state = self.ANI_A_GET_TREASURE
-        elif self.player.Aressted :
-            self.state = self.ANI_S_AVOID_GUARD
         else:
             self.state = self.ANI_NOTHING
 

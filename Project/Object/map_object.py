@@ -68,7 +68,6 @@ class Map:
             floor_group.append(floor)
 
 
-
         return floor_group
         pass
 
@@ -116,7 +115,6 @@ class Map:
         pass
 
     def create_treasure(self):
-        # 파일을 받아 경비원 생성
         treasure_data_file = open('Data/treasure_data_text.txt', 'r')
         treasure_data = json.load(treasure_data_file)
         treasure_data_file.close()
@@ -125,10 +123,14 @@ class Map:
         for name in treasure_data:
             treasure = treasure_object.Treasure(self.background)
             treasure.name = name
+            treasure.set_sort()
             treasure.x = treasure_data[name]['x']
             treasure.floor_num = treasure_data[name]['floor_num']
             treasure.y = (treasure.floor_num - 1) * (self.floor_cell_height + self.floor_width)\
                          + self.floor_width + treasure.height / 2 - 10
+            if(treasure.sort == treasure.ART):
+                treasure.y += 70
+
             treasure_group.append(treasure)
 
         return treasure_group

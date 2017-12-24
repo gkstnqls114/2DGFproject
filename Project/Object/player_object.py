@@ -14,16 +14,16 @@ class Player:
     image = None
 
     #FRAME
-    PIXEL_PER_METER = (10.0 / 0.3)
+    PIXEL_PER_METER = (10.0 / 0.16)
     RUN_SPEED_KMPH = 20.0
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
     RUN_SPEED_MPS = (RUN_SPEED_MPM / 50.0)
     RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
     # 한번 액션하는데 걸리는 시간 , 초
+    TIME_PER_ACTION = 0.5
+    ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 
-    # 액션 속도
-    FRAME_PER_ACTION = 2
 
     #ANIMAITON
     ANI_STAND = 0
@@ -49,11 +49,11 @@ class Player:
         self.background = bg
         self.background.set_center_object(self)
 
-        self.TIME_PER_ACTION = 0.5
-        self.ACTION_PER_TIME = 1.0 / self.TIME_PER_ACTION
-
         self.width = 90
         self.height = 110
+
+        # 액션 속도
+        self.FRAME_PER_ACTION = 1
 
         #플레이어 카메라상 좌표
         self.x = 100
@@ -91,26 +91,12 @@ class Player:
         #경비병에게 잡혔다
         self.Aressted = False
 
-
        #현재 플레이어가 있는 플로어
         self.floor_at_present = 1
 
         self.runningTime = 0
         #self.pause = (self.x, self.y, self.frame, self.dir)
 
-    def showstairPoint(self):
-        if(len(self.stairPoint) == 0):
-            print("없다")
-            return
-
-        print("top, bottom: ")
-
-        print("%d %d, %d %d"
-                  %(self.stairPoint[0],
-                    self.stairPoint[1],
-                    self.stairPoint[2],
-                    self.stairPoint[3]))
-        pass
 
     def MoveInBackground(self):
         self.y = clamp(0,
@@ -128,15 +114,16 @@ class Player:
 
         distance = Player.RUN_SPEED_PPS * frame_time
         self.total_frames += \
-            Player.FRAME_PER_ACTION * self.ACTION_PER_TIME * frame_time
+            self.FRAME_PER_ACTION * Player.ACTION_PER_TIME * frame_time
         self.frame = int(self.total_frames) % 8
 
         self.runningFunc()
 
         self.MoveInBackground()
 
+        self.button.update(frame_time)
+
         if (self.Aressted == True):
-            self.button.update(frame_time)
             return
 
         if(self.Up):
@@ -144,26 +131,19 @@ class Player:
             self.y += self.dir
             self.x += self.dir
 
-            self.button.update(frame_time)
-
         if (self.Down):
             self.state = self.ANI_STAIRS_MOVE_DOWN
             self.y -= self.dir
             self.x -= self.dir
-
-            self.button.update(frame_time)
 
         if(self.Stairs_Move): return
         if (self.Right):
             self.state = self.ANI_RIGHT
             self.x += self.dir
 
-            self.button.update(frame_time)
         if (self.Left):
             self.state = self.ANI_LEFT
             self.x -= self.dir
-
-            self.button.update(frame_time)
 
     def draw(self):
         self.button.draw()
@@ -203,28 +183,32 @@ class Player:
             s = 115 #도망가기
             if event.key == z :
                 if (self.Aressted == True): return
-                self.TIME_PER_ACTION = 2
                 self.Run = True
+
             if event.key == x:
                 if(self.Aressted == True) : return
                 if(self.state != self.ANI_STAND): return
                 self.Change = True
+
             elif event.key == a:
                 if (self.Aressted == True): return
                 if not self.Treasure_Can_Open:return
                 self.Treasure_Can_Open = False
                 self.Treasure_Search = True
+
             elif event.key == s:
                 if (self.Aressted == False): return
                 self.guard.Hp -= 1
                 if(self.guard.Hp <= 0):
                     self.Aressted = False
+
             elif event.key == SDLK_RIGHT:
                 if (self.Aressted == True): return
                 if self.Stairs_Move: return
                 if self.Change: return
                 self.Right = True
                 self.state = self.ANI_RIGHT
+
             elif  event.key == SDLK_LEFT:
                 if (self.Aressted == True): return
                 if self.Stairs_Move: return
@@ -241,6 +225,7 @@ class Player:
                 self.stairs_up()
                 self.state = self.ANI_STAND
                 self.floor_at_present +=1
+
             elif event.key == SDLK_UP and self.Stairs_Move:
                 if (self.Aressted == True): return
                 if (self.Change): return
@@ -248,10 +233,10 @@ class Player:
                     self.floor_at_present += 1
                 self.stairs_move_up()
                 self.state = self.ANI_STAIRS_MOVE_UP
+
             elif event.key == SDLK_DOWN and self.Stairs_Can_Down:
                 if (self.Aressted == True): return
                 if (self.Change): return
-                print("윗부분 위치는...")
                 print(self.stairPoint[0], ", ", self.stairPoint[1])
                 self.x = self.stairPoint[0]
                 self.y = self.stairPoint[1]
@@ -260,6 +245,7 @@ class Player:
                 self.stairs_down()
                 self.state = self.ANI_STAND
                 self.floor_at_present -= 1
+
             elif event.key == SDLK_DOWN and self.Stairs_Move:
                 if (self.Aressted == True): return
                 if (self.Change): return
@@ -273,8 +259,6 @@ class Player:
             z = 122
             x = 120
             if event.key == z:
-
-                self.TIME_PER_ACTION = 0.5
                 self.Run = False
             if event.key == x:
                 if self.Stairs_Move: return
@@ -332,9 +316,10 @@ class Player:
     def runningFunc(self):
         if self.Run:
             self.dir = 10
-
+            self.FRAME_PER_ACTION = 3
         else:
             self.dir = 5
+            self.FRAME_PER_ACTION = 2
 
 
     def get_bb(self):
