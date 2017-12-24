@@ -1,5 +1,0 @@
-{
-	"Floor1" : {"floor_num":1},
-	"Floor2" : {"floor_num":2},
-	"Floor3" : {"floor_num":3}
-}

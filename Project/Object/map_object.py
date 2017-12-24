@@ -4,22 +4,24 @@ import random
 from pico2d import *
 
 from Object import background_object
-from Object import background_object
 from Object import floor_object
 from Object import stairs_object
 from Object import treasure_object
 from Object import guard_object
-
+from Object import door_object
 
 name = "Map"
 
 # 플레이어를 제외한 모든 오브젝트들의 위치가 있다.
 class Map:
     background = None
+    door = None
 
     def __init__(self):
         if(self.background == None):
             self.background = background_object.Background()
+        if(self.door == None):
+            self.door = door_object.door(self.background)
 
         self.unit = 0
         self.map_width = 0
@@ -48,6 +50,7 @@ class Map:
         self.number_of_floor =  map_data["Number Of Floor"]
         self.map_height = int((self.floor_cell_height + self.floor_width)* self.number_of_floor)
 
+        self.door.y = self.floor_width + self.door.height / 2
         self.background.width = self.map_width
         self.background.height = self.map_height
 
@@ -68,6 +71,7 @@ class Map:
 
         return floor_group
         pass
+
     def create_stairs(self):
         #파일을 받아 계단 생성
         stairs_data_file = open('Data/stairs_data_text.txt', 'r')
@@ -87,10 +91,9 @@ class Map:
                        + self.floor_width + stairs.height / 2 - 10
             stairs_group.append(stairs)
 
-        print("완료")
-
         return stairs_group
         pass
+
     def create_guard(self):
         # 파일을 받아 경비원 생성
         guard_data_file = open('Data/guard_data_text.txt', 'r')
@@ -111,6 +114,7 @@ class Map:
 
         return guard_group
         pass
+
     def create_treasure(self):
         # 파일을 받아 경비원 생성
         treasure_data_file = open('Data/treasure_data_text.txt', 'r')
@@ -163,6 +167,8 @@ class Map:
         for guard in self.guard_group:
             guard.draw()
             pass
+
+        self.door.draw()
         pass
 
     def update(self, frame_time):

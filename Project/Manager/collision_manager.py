@@ -76,9 +76,6 @@ class Collision:
             player.state = player.ANI_STAND
             pass
         elif(self.Reach_Bottom()):
-            print ("계단 아래 도달")
-
-            print("수정전: ", player.x, " ", player.y)
 
             stairs = Game.map.get_stairs(self.stairs_move_index)
             fix_x = stairs.get_bottom_point()[0] + stairs.background.window_left
@@ -86,8 +83,6 @@ class Collision:
 
             player.x = fix_x
             player.y = fix_y + player.height / 2
-
-            print("수정전: ", player.x, " ", player.y)
 
             player.Stairs_Move = False
             player.Stairs_Can_Up = False
@@ -169,8 +164,6 @@ class Collision:
                 fix_top_y = stairs.get_top_point()[1] + stairs.background.window_bottom
                 fix_bottom_x = stairs.get_bottom_point()[0] + stairs.background.window_left
                 fix_bottom_y = stairs.get_bottom_point()[1] + stairs.background.window_bottom
-
-                print(fix_top_x , " ", fix_top_y ," " , fix_bottom_x ," ", fix_bottom_y)
 
                 player.Set_stairsPoint(fix_top_x,fix_top_y,  fix_bottom_x,  fix_bottom_y)
 
@@ -278,11 +271,6 @@ class Collision:
 
         center_x, center_y = guard.get_point()
         left_b, bottom_b, right_b, top_b = b.get_bottom_bb()
-
-        print("Guard: ", center_x, " ", center_y)
-        print("계단X: ", left_b, " ", right_b)
-        print("계단Y: ", bottom_b, " ", top_b)
-
 
         if center_x > right_b: return False
         if center_x < left_b: return False
