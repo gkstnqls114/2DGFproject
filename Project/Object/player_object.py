@@ -35,7 +35,7 @@ class Player:
 
     def __init__(self, bg):
         if Player.image == None:
-            Player.image = load_image('Image/2Dplayer_sprite.png')
+            Player.image = load_image('Image/Sprite/2Dplayer_sprite.png')
         if Player.font == None:
             Player.font = load_font('ENCR10B.TTF',16)
         if Player.position_font == None:

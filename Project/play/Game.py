@@ -6,7 +6,7 @@ from pico2d import *
 
 #Manager
 from Manager import collision_manager
-from Manager import Time
+from Manager import mytime
 
 #Scene
 from Scene import pause_state
@@ -23,7 +23,7 @@ name = "Game"
 player = None
 
 map = None
-font = None
+gameover = None
 time = None
 
 collisionManager = None
@@ -44,7 +44,7 @@ class Game:
         player.y = map.floor_width + player.height / 2 - 10
 
         collisionManager = collision_manager.Collision()
-        time = Time.Time()
+        time = mytime.Time()
 
         pass
 

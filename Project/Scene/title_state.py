@@ -26,7 +26,7 @@ def enter():
     global STARTColor, EXITColor, HOWColor
     global SelectColor, NotSelectColor
 
-    image = load_image('Image/title.png')
+    image = load_image('Image/Scene/title.png')
     START = load_font('Font/GILSANUB.TTF', 40)
     EXIT = load_font('Font/GILSANUB.TTF', 40)
     HOW = load_font('Font/GILSANUB.TTF', 40)

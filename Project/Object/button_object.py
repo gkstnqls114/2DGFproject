@@ -17,7 +17,7 @@ class Button:
 
     def __init__(self, bg):
         self.name = None
-        self.image = load_image('Image/Button_sprite.png')
+        self.image = load_image('Image/Sprite/Button_sprite.png')
         self.width = self.image.w
         self.height = 50
         self.x = self.width / 2

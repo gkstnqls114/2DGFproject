@@ -31,7 +31,7 @@ class Guard:
 
     def __init__(self, bg):
         if Guard.image == None:
-            Guard.image = load_image('Image/guard_sprite.png')
+            Guard.image = load_image('Image/Sprite/guard_sprite.png')
         if Guard.font == None:
             Guard.font = load_font('ENCR10B.TTF',16)
         self.background = bg

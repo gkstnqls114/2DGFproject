@@ -7,7 +7,7 @@ from Scene import main_state
 
 name = "PauseState"
 
-font = None
+gameover = None
 pauseimg = None
 
 class Pause:
