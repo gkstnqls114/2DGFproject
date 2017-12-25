@@ -30,6 +30,7 @@ class Collision:
                 if(guard.Hp > 0):
                     player.Aressted = True
                     player.ArrestGuard(guard)
+                    guard.Arresting = True
 
                 if (player.x < guard.x):
                     guard.playerState = guard.ANI_LEFT
@@ -46,7 +47,7 @@ class Collision:
             if(self.collide_see_guard(index)):
                 guard = Game.map.get_guard(index)
                 guard.SeePlayer = True
-                guard.SeePlayerTime = 1000
+                guard.SeePlayerTime = 500
 
                 if(player.x < guard.x):
                     guard.playerState = guard.ANI_LEFT

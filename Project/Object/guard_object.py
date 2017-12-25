@@ -10,6 +10,7 @@ name = "Guard"
 class Guard:
     font = None
     image = None
+    bump_image = None
     icon = None
 
     #FRAME
@@ -28,10 +29,14 @@ class Guard:
     #ANIMAITON
     ANI_RIGHT = 0
     ANI_LEFT = 1
+    ANI_BLACKOUT_RIGHT = 2
+    ANI_BLACKOUT_LEFT = 3
 
     def __init__(self, bg):
         if Guard.image == None:
             Guard.image = load_image('Image/Sprite/guard_sprite.png')
+        if Guard.bump_image == None:
+            Guard.bump_image = load_image('Image/Sprite/bump_sprite.png')
         if Guard.icon == None:
             Guard.icon = load_image('Image/guard see player.png')
         if Guard.font == None:
@@ -62,6 +67,8 @@ class Guard:
         self.SeePlayer = False
         self.Hp = 10
 
+        self.Arresting = False
+
         #계단을 올라 가는 bool
         self.top_range = 0
         self.bottom_range = 0
@@ -73,14 +80,13 @@ class Guard:
         self.floor_num = 1
         #플레이어를 인식한 시간
         # 0 되면 다시 리셋
-        self.SeePlayerTime = 1000
+        self.SeePlayerTime = 500
         self.recoveryTime = 100
         #플레이어의 상태
         self.playerState = -1
         self.playerFloor = -1
 
         self.runningTime = 0
-        self.pause = (self.x, self.y, self.frame, self.dir)
 
     def MoveInBackground(self):
         min_y = 0
@@ -94,8 +100,25 @@ class Guard:
 
     def update(self, frame_time):
         if(self.Hp <= 0):
+            if self.state == self.ANI_RIGHT:
+                self.state = self.ANI_BLACKOUT_RIGHT
+                self.width = 110
+                self.frame = 0
+            elif self.state == self.ANI_LEFT:
+                self.state = self.ANI_BLACKOUT_LEFT
+                self.width = 110
+                self.frame = 0
+
             self.recoveryTime -= 1
+            self.Arresting = False
+
             if self.recoveryTime < 0:
+                if self.state == self.ANI_BLACKOUT_RIGHT:
+                    self.state = self.ANI_RIGHT
+                elif self.state == self.ANI_BLACKOUT_LEFT:
+                    self.state = self.ANI_LEFT
+
+                self.width = 90
                 self.Hp = 10
                 self.recoveryTime = 100
             return
@@ -161,8 +184,14 @@ class Guard:
         pass
 
     def draw(self):
-        self.image.clip_draw(self.frame * self.width, self.state * self.height,\
+        if not self.Arresting:
+            self.image.clip_draw(self.frame * self.width, self.state * self.height,\
                              self.width, self.height, \
+                             self.x - self.background.window_left,\
+                             self.y - self.background.window_bottom)
+        else:
+            self.bump_image.clip_draw(self.frame * 120, 0,\
+                             120, 120, \
                              self.x - self.background.window_left,\
                              self.y - self.background.window_bottom)
 
@@ -171,7 +200,8 @@ class Guard:
         if(self.SeePlayer):
             Guard.font.draw(self.x  - self.background.window_left- 35 ,
                             self.y  - self.background.window_bottom - 100, 'Hp %d' %(self.Hp))
-            self.icon.draw(self.x  - self.background.window_left ,
+            if not self.Arresting:
+                self.icon.draw(self.x  - self.background.window_left ,
                            self.y - self.background.window_bottom + self.height / 2 + 25)
         else:
             pass

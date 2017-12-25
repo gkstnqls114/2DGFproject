@@ -9,7 +9,6 @@ name = "Player"
 
 class Player:
     font = None
-    position_font = None
     treasure_font = None
     image = None
 
@@ -38,8 +37,6 @@ class Player:
             Player.image = load_image('Image/Sprite/2Dplayer_sprite.png')
         if Player.font == None:
             Player.font = load_font('ENCR10B.TTF',16)
-        if Player.position_font == None:
-            Player.position_font = load_font('ENCR10B.TTF', 16)
         if Player.treasure_font == None:
             Player.treasure_font = load_font('ENCR10B.TTF', 16)
 
@@ -147,24 +144,16 @@ class Player:
 
     def draw(self):
         self.button.draw()
-        self.image.clip_draw(self.frame * self.width, self.state * self.height,\
+        if not self.Aressted:
+            self.image.clip_draw(self.frame * self.width, self.state * self.height,\
                              self.width, self.height, \
                              self.x - self.background.window_left,\
                              self.y - self.background.window_bottom)
+        else:
+            pass
+
         self.draw_bb()
 
-        if(self.Stairs_Can_Up):
-            Player.font.draw(self.x  - self.background.window_left - 35, self.y  - self.background.window_bottom+ 50, 'Can_Up')
-        elif(self.Stairs_Can_Down):
-            Player.font.draw(self.x - self.background.window_left- 35, self.y  - self.background.window_bottom+ 50, 'Can_Down')
-        elif( self.Stairs_Move):
-            Player.font.draw(self.x  - self.background.window_left- 35 , self.y  - self.background.window_bottom+ 50, 'Stairs_Move')
-        elif (self.Treasure_Can_Open):
-            Player.font.draw(self.x  - self.background.window_left- 35 , self.y  - self.background.window_bottom+ 50, 'Treasure_Can_Open')
-        elif (self.Aressted):
-            Player.font.draw(self.x  - self.background.window_left- 35 , self.y  - self.background.window_bottom+ 50, 'Aressted')
-
-        Player.position_font.draw(self.background.canvas_width - 150, self.background.canvas_height - 50, "FLOOR: %d" %(self.floor_at_present))
         Player.treasure_font.draw(self.background.canvas_width - 150, self.background.canvas_height - 100, "Get: %d" %(self.treasure_num))
 
 
