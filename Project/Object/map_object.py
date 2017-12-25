@@ -73,19 +73,19 @@ class Map:
 
     def create_stairs(self):
         #파일을 받아 계단 생성
-        stairs_data_file = open('Data/stairs_data_text.txt', 'r')
-        stairs_data = json.load(stairs_data_file)
-        stairs_data_file.close()
-
         stairs_group = []
-        for name in stairs_data:
+        for i in range(1, self.number_of_floor - 1):
             stairs = stairs_object.Stairs(self.background)
-            stairs.name = name
             stairs.width = (self.floor_cell_height + self.floor_width)
             stairs.height = (self.floor_cell_height + self.floor_width)
 
-            stairs.floor_num = stairs_data[name]['floor_num']
-            stairs.x = stairs_data[name]['x']
+            stairs.floor_num = i
+
+            if(stairs.floor_num % 2 == 1):
+                stairs.x = self.map_width - stairs.width / 2 - 100
+            else:
+                stairs.x =  stairs.width / 2 + 100
+
             stairs.y = (stairs.floor_num - 1) * (self.floor_cell_height + self.floor_width)\
                        + self.floor_width + stairs.height / 2 - 10
             stairs_group.append(stairs)
@@ -95,42 +95,38 @@ class Map:
 
     def create_guard(self):
         # 파일을 받아 경비원 생성
-        guard_data_file = open('Data/guard_data_text.txt', 'r')
-        guard_data = json.load(guard_data_file)
-        guard_data_file.close()
 
         guard_group = []
-        for name in guard_data:
+        for i in range(2, self.number_of_floor):
             guard = guard_object.Guard(self.background)
-            guard.name = name
-            guard.x = guard_data[name]['x']
-            guard.Map_x = guard.x
-            guard.floor_num = guard_data[name]['floor_num']
+            guard.x = random.randrange(guard.width / 2, self.map_width - guard.width / 2)
+            guard.floor_num = i
             guard.y = (guard.floor_num - 1) * (self.floor_cell_height + self.floor_width)\
                       + self.floor_width + guard.height / 2 - 10
-            guard.Map_y = guard.y
             guard_group.append(guard)
 
         return guard_group
         pass
 
     def create_treasure(self):
-        treasure_data_file = open('Data/treasure_data_text.txt', 'r')
-        treasure_data = json.load(treasure_data_file)
-        treasure_data_file.close()
 
         treasure_group = []
-        for name in treasure_data:
-            treasure = treasure_object.Treasure(self.background)
-            treasure.name = name
-            treasure.x = treasure_data[name]['x']
-            treasure.floor_num = treasure_data[name]['floor_num']
-            treasure.y = (treasure.floor_num - 1) * (self.floor_cell_height + self.floor_width)\
-                         + self.floor_width + treasure.height / 2 - 10
-            if(treasure.sort == treasure.ART):
-                treasure.y += 70
+        for floornum in range(1, self.number_of_floor):
+            for i in range(0, 6):
+                treasure = treasure_object.Treasure(self.background)
 
-            treasure_group.append(treasure)
+                if floornum % 2 == 1:
+                    treasure.x = random.randrange(200, self.map_width - 500)
+                else:
+                    treasure.x = random.randrange(200, self.map_width - treasure.width / 2 - 50)
+
+                treasure.floor_num = floornum
+                treasure.y = (treasure.floor_num - 1) * (self.floor_cell_height + self.floor_width)\
+                         + self.floor_width + treasure.height / 2 - 10
+                if(treasure.sort == treasure.ART):
+                    treasure.y += 70
+
+                treasure_group.append(treasure)
 
         return treasure_group
         pass

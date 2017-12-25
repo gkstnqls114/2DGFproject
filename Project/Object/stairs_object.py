@@ -70,7 +70,15 @@ class Stairs:
 
         return top_x, top_y
 
+    def get_bb(self):
+        left = self.x - self.background.window_left- self.width / 2
+        bottom = self.y - self.background.window_bottom- self.height / 2
+        right = self.x - self.background.window_left+ self.width / 2
+        top =  self.y - self.background.window_bottom+ self.height / 2
+        return left, bottom, right, top
+
     def draw_bb(self):
+        draw_rectangle(*self.get_bb())
         draw_rectangle(*self.get_bottom_bb())
         draw_rectangle(*self.get_top_bb())
 

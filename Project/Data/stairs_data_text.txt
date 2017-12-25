@@ -1,4 +1,0 @@
-{
-	"Stairs_1_To_2" : {"x":600, "floor_num":1},
-	"Stairs_2_To_3" : {"x":1200, "floor_num":2} 
-}

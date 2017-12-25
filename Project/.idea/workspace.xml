@@ -14,8 +14,8 @@
       <file leaf-file-name="player_object.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Object/player_object.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="311">
-              <caret line="152" column="16" lean-forward="false" selection-start-line="152" selection-start-column="16" selection-end-line="152" selection-end-column="16" />
+            <state relative-caret-position="234">
+              <caret line="309" column="24" lean-forward="true" selection-start-line="309" selection-start-column="24" selection-end-line="309" selection-end-column="24" />
               <folding />
             </state>
           </provider>
@@ -31,11 +31,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="map_object.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="map_object.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Object/map_object.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="96">
-              <caret line="124" column="32" lean-forward="false" selection-start-line="124" selection-start-column="32" selection-end-line="124" selection-end-column="32" />
+            <state relative-caret-position="119">
+              <caret line="99" column="46" lean-forward="false" selection-start-line="99" selection-start-column="46" selection-end-line="99" selection-end-column="46" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -56,8 +56,8 @@
       <file leaf-file-name="treasure_object.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Object/treasure_object.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="104">
-              <caret line="29" column="31" lean-forward="true" selection-start-line="29" selection-start-column="31" selection-end-line="29" selection-end-column="31" />
+            <state relative-caret-position="-506">
+              <caret line="32" column="0" lean-forward="true" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -65,11 +65,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="guard_object.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="guard_object.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Object/guard_object.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="234">
-              <caret line="205" column="13" lean-forward="true" selection-start-line="205" selection-start-column="13" selection-end-line="205" selection-end-column="13" />
+            <state relative-caret-position="-824">
+              <caret line="35" column="31" lean-forward="true" selection-start-line="35" selection-start-column="31" selection-end-line="35" selection-end-column="31" />
               <folding>
                 <element signature="e#3820#3878#0" expanded="false" />
                 <element signature="e#3915#3972#0" expanded="false" />
@@ -86,11 +86,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="button_object.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Object/button_object.py">
+      <file leaf-file-name="door_object.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Object/door_object.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1150">
-              <caret line="53" column="0" lean-forward="false" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
+            <state relative-caret-position="394">
+              <caret line="40" column="38" lean-forward="true" selection-start-line="40" selection-start-column="38" selection-end-line="40" selection-end-column="38" />
               <folding />
             </state>
           </provider>
@@ -123,8 +123,8 @@
       <file leaf-file-name="stairs_object.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Object/stairs_object.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="23">
-              <caret line="32" column="29" lean-forward="true" selection-start-line="32" selection-start-column="29" selection-end-line="32" selection-end-column="29" />
+            <state relative-caret-position="279">
+              <caret line="59" column="0" lean-forward="true" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -141,17 +141,12 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>guard</find>
-      <find>ani_</find>
-      <find>hp</find>
-      <find>DRAW</find>
       <find>수정</find>
       <find>right</find>
       <find>button</find>
       <find>self.y</find>
       <find>ar</find>
       <find>버튼</find>
-      <find>stair</find>
       <find>위와</find>
       <find>exit</find>
       <find>pri</find>
@@ -165,12 +160,17 @@
       <find>create</find>
       <find>random</find>
       <find>tre</find>
-      <find>running</find>
       <find>follow</find>
       <find>update</find>
       <find>arr</find>
-      <find>draw</find>
       <find>arres</find>
+      <find>draw</find>
+      <find>stair</find>
+      <find>init</find>
+      <find>guard</find>
+      <find>running</find>
+      <find>tr</find>
+      <find>rando</find>
     </findStrings>
     <replaceStrings>
       <replace>UP</replace>
@@ -214,7 +214,6 @@
         <option value="$PROJECT_DIR$/Object/wall_object.py" />
         <option value="$PROJECT_DIR$/Object/Inventory_object.py" />
         <option value="$PROJECT_DIR$/Object/Time.py" />
-        <option value="$PROJECT_DIR$/Object/stairs_object.py" />
         <option value="$PROJECT_DIR$/Object/background_object.py" />
         <option value="$PROJECT_DIR$/Object/floor_object.py" />
         <option value="$PROJECT_DIR$/Object/Treasure/jewel.py" />
@@ -231,17 +230,18 @@
         <option value="$PROJECT_DIR$/play/Game.py" />
         <option value="$PROJECT_DIR$/Manager/mytime.py" />
         <option value="$PROJECT_DIR$/Object/button_object.py" />
-        <option value="$PROJECT_DIR$/Object/map_object.py" />
-        <option value="$PROJECT_DIR$/Object/treasure_object.py" />
-        <option value="$PROJECT_DIR$/Object/player_object.py" />
         <option value="$PROJECT_DIR$/Manager/collision_manager.py" />
+        <option value="$PROJECT_DIR$/Object/stairs_object.py" />
         <option value="$PROJECT_DIR$/Object/guard_object.py" />
+        <option value="$PROJECT_DIR$/Object/player_object.py" />
+        <option value="$PROJECT_DIR$/Object/treasure_object.py" />
+        <option value="$PROJECT_DIR$/Object/map_object.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="102" />
-    <option name="y" value="106" />
+    <option name="x" value="74" />
+    <option name="y" value="149" />
     <option name="width" value="1046" />
     <option name="height" value="875" />
   </component>
@@ -424,7 +424,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="102" y="106" width="1046" height="875" extended-state="0" />
+    <frame x="74" y="149" width="1046" height="875" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24902724" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -629,14 +629,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Object/door_object.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="276">
-          <caret line="15" column="33" lean-forward="false" selection-start-line="15" selection-start-column="33" selection-end-line="15" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Object/button_object.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1150">
@@ -653,46 +645,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Object/map_object.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="96">
-          <caret line="124" column="32" lean-forward="false" selection-start-line="124" selection-start-column="32" selection-end-line="124" selection-end-column="32" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Object/floor_object.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="164">
           <caret line="14" column="34" lean-forward="false" selection-start-line="14" selection-start-column="34" selection-end-line="14" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Object/stairs_object.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="23">
-          <caret line="32" column="29" lean-forward="true" selection-start-line="32" selection-start-column="29" selection-end-line="32" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Object/treasure_object.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="104">
-          <caret line="29" column="31" lean-forward="true" selection-start-line="29" selection-start-column="31" selection-end-line="29" selection-end-column="31" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Object/player_object.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="311">
-          <caret line="152" column="16" lean-forward="false" selection-start-line="152" selection-start-column="16" selection-end-line="152" selection-end-column="16" />
           <folding />
         </state>
       </provider>
@@ -717,10 +673,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Object/door_object.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="394">
+          <caret line="40" column="38" lean-forward="true" selection-start-line="40" selection-start-column="38" selection-end-line="40" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Object/stairs_object.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="279">
+          <caret line="59" column="0" lean-forward="true" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Object/guard_object.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="205" column="13" lean-forward="true" selection-start-line="205" selection-start-column="13" selection-end-line="205" selection-end-column="13" />
+        <state relative-caret-position="-824">
+          <caret line="35" column="31" lean-forward="true" selection-start-line="35" selection-start-column="31" selection-end-line="35" selection-end-column="31" />
           <folding>
             <element signature="e#3820#3878#0" expanded="false" />
             <element signature="e#3915#3972#0" expanded="false" />
@@ -732,6 +704,34 @@
             <element signature="e#7386#7442#0" expanded="false" />
             <element signature="e#7479#7537#0" expanded="false" />
             <element signature="e#7570#7656#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Object/player_object.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="309" column="24" lean-forward="true" selection-start-line="309" selection-start-column="24" selection-end-line="309" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Object/treasure_object.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-506">
+          <caret line="32" column="0" lean-forward="true" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Object/map_object.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="99" column="46" lean-forward="false" selection-start-line="99" selection-start-column="46" selection-end-line="99" selection-end-column="46" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
           </folding>
         </state>
       </provider>

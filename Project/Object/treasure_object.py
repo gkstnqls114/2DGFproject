@@ -24,7 +24,7 @@ class Treasure:
         treasure_data = json.load(treasure_data_file)
         treasure_data_file.close()
 
-        self.sort = random.randrange(0,1)
+        self.sort = random.randrange(0,2)
 
         if (self.sort == self.BOX):
             self.width = treasure_data["BOX"]["width"]

@@ -210,10 +210,10 @@ class Guard:
     def runningFunc(self):
         if self.Run:
             self.dir = 7
-            self.FRAME_PER_ACTION = 3
+            self.FRAME_PER_ACTION = 4
         else:
             self.dir = 5
-            self.FRAME_PER_ACTION = 2
+            self.FRAME_PER_ACTION = 3
 
     def get_bb(self):
         return  self.x  - self.background.window_left- self.width /2 ,\

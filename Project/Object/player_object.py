@@ -305,7 +305,7 @@ class Player:
     def runningFunc(self):
         if self.Run:
             self.dir = 10
-            self.FRAME_PER_ACTION = 3
+            self.FRAME_PER_ACTION = 4.5
         else:
             self.dir = 5
             self.FRAME_PER_ACTION = 2
