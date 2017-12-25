@@ -10,9 +10,10 @@ name = "Guard"
 class Guard:
     font = None
     image = None
+    icon = None
 
     #FRAME
-    PIXEL_PER_METER = (10.0 / 0.3)
+    PIXEL_PER_METER = (10.0 / 0.16)
     RUN_SPEED_KMPH = 20.0
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
     RUN_SPEED_MPS = (RUN_SPEED_MPM / 50.0)
@@ -23,7 +24,6 @@ class Guard:
 
     # 액션 속도
     ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
-    FRAME_PER_ACTION = 1
 
     #ANIMAITON
     ANI_RIGHT = 0
@@ -32,6 +32,8 @@ class Guard:
     def __init__(self, bg):
         if Guard.image == None:
             Guard.image = load_image('Image/Sprite/guard_sprite.png')
+        if Guard.icon == None:
+            Guard.icon = load_image('Image/guard see player.png')
         if Guard.font == None:
             Guard.font = load_font('ENCR10B.TTF',16)
         self.background = bg
@@ -41,6 +43,8 @@ class Guard:
         self.height = 110
         self.x = 500
         self.y = 50 + 85
+
+        self.FRAME_PER_ACTION = 2
 
         self.frame = 0
         self.total_frames =0.0
@@ -83,7 +87,6 @@ class Guard:
         self.y = clamp(min_y,
                        self.y,
                        self.background.height)
-
         min_x = 0
         self.x = clamp(min_x,
                        self.x,
@@ -97,17 +100,19 @@ class Guard:
                 self.recoveryTime = 100
             return
 
-        distance = Guard.RUN_SPEED_PPS * frame_time
-        self.total_frames += \
-            Guard.FRAME_PER_ACTION * Guard.ACTION_PER_TIME * frame_time
-        self.frame = int(self.total_frames) % 8
-
         self.runningFunc()
 
+        distance = Guard.RUN_SPEED_PPS * frame_time
+        self.total_frames += \
+            self.FRAME_PER_ACTION * Guard.ACTION_PER_TIME * frame_time
+        self.frame = int(self.total_frames) % 8
+
         if(self.SeePlayer):
+            self.Run = True
             self.follow_player()
             pass
         else:
+            self.Run = False
             if(self.x + self.width / 2 > self.background.width):
                 self.Right = False
                 self.Left = True
@@ -116,33 +121,35 @@ class Guard:
                 self.Right = True
                 self.Left = False
 
-
-        #if (self.Up):
-        #    self.y += self.dir
-        #    self.x += self.dir
-        #    self.MoveInBackground()
-        #if (self.Down):
-        #    self.y -= self.dir
-        #    self.x -= self.dir
-        #    self.MoveInBackground()
-#
-        #if(self.Up or self.Down): return
         if (self.Right):
             self.state = self.ANI_RIGHT
             self.x += self.dir
-            self.MoveInBackground()
         if (self.Left):
             self.state = self.ANI_LEFT
             self.x -= self.dir
-            self.MoveInBackground()
+
+        self.MoveInBackground()
 
 
     def follow_player(self):
         # 쫓아간다
-        self.dir = 5
         self.SeePlayerTime -= 1
 
+        if (self.SeePlayerTime == 0):
+            self.SeePlayerTime = 1000
+            self.SeePlayer = False
+
+        if (self.x + self.width / 2 > 1600):
+            self.playerState = self.ANI_LEFT
+            self.Right = False
+            self.Left = True
+        if (self.x - self.width / 2 < 0):
+            self.playerState = self.ANI_RIGHT
+            self.Right = True
+            self.Left = False
+
         player = Game.player
+        if player.Stairs_Move: return
 
         if (self.playerState == self.ANI_RIGHT):
             self.Right = True
@@ -150,85 +157,33 @@ class Guard:
         elif (self.playerState == self.ANI_LEFT):
             self.Right = False
             self.Left = True
-        elif (self.playerState == self.ANI_STAIRS_MOVE_UP):
-            stairs = Game.stairs
 
-            pass
-        elif (self.playerState == self.ANI_STAIRS_MOVE_DOWN):
-            stairs = Game.stairs
-
-            pass
-
-        if (self.x + self.width / 2 > 1600):
-            self.playerState = self.ANI_LEFT
-
-        if (self.x - self.width / 2 < 0):
-            self.playerState = self.ANI_RIGHT
-
-        if (self.SeePlayerTime == 0):
-            self.SeePlayerTime = 1000
-            self.SeePlayer = False
         pass
 
     def draw(self):
-
         self.image.clip_draw(self.frame * self.width, self.state * self.height,\
                              self.width, self.height, \
                              self.x - self.background.window_left,\
                              self.y - self.background.window_bottom)
-
-        #self.image.draw( self.x  - self.background.window_left, self.y  - self.background.window_bottom)
 
         self.draw_bb()
 
         if(self.SeePlayer):
             Guard.font.draw(self.x  - self.background.window_left- 35 ,
                             self.y  - self.background.window_bottom - 100, 'Hp %d' %(self.Hp))
+            self.icon.draw(self.x  - self.background.window_left ,
+                           self.y - self.background.window_bottom + self.height / 2 + 25)
         else:
             pass
 
 
-
-    def stairs_up(self):
-        self.Stairs_Can_Up = False
-        self.Stairs_Move = True
-        self.Right = False
-        self.Left = False
-        self.Up = True
-        self.Down = False
-
-        pass
-
-    def stairs_down(self):
-        self.Stairs_Can_Down = False
-        self.Stairs_Move = True
-        self.Right = False
-        self.Left = False
-        self.Up = False
-        self.Down = True
-
-    def stairs_move_down(self):
-        self.Stairs_Can_Down = False
-        self.Stairs_Move = True
-        self.Right = False
-        self.Left = False
-        self.Down = True
-        self.Up = False
-
-    def stairs_move_up(self):
-        self.Stairs_Can_Down = False
-        self.Stairs_Move = True
-        self.Right = False
-        self.Left = False
-        self.Down = False
-        self.Up = True
-
     def runningFunc(self):
         if self.Run:
-            self.dir = 3
-
+            self.dir = 7
+            self.FRAME_PER_ACTION = 3
         else:
-            self.dir = 1
+            self.dir = 5
+            self.FRAME_PER_ACTION = 2
 
     def get_bb(self):
         return  self.x  - self.background.window_left- self.width /2 ,\

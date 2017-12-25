@@ -12,43 +12,39 @@ class Treasure:
     def __init__(self, bg):
         if(self.image == None):
             self.image = load_image('Image/Sprite/treasure_sprite.png')
-        self.width = 0
-        self.height = 0
-        self.sprite_height = 0
         self.background = bg
 
         #상대적인 카메라 위치
         self.x = 0
         self.y = 0
-
         self.state = self.CLOSE
-        #self.sort = random.randrange(0,1)
-        self.sort = self.BOX
         self.floor_num = 1
 
-    def set_sort(self):
         treasure_data_file = open('Data/treasure_object_data.txt', 'r')
         treasure_data = json.load(treasure_data_file)
         treasure_data_file.close()
 
-        self.sort = self.ART
+        self.sort = random.randrange(0,1)
 
-        if(self.sort == self.BOX):
+        if (self.sort == self.BOX):
             self.width = treasure_data["BOX"]["width"]
             self.height = treasure_data["BOX"]["height"]
             self.sprite_height = 0
 
-        if(self.sort == self.ART):
+        if (self.sort == self.ART):
             self.width = treasure_data["ART"]["width"]
             self.height = treasure_data["ART"]["height"]
             self.sprite_height = treasure_data["BOX"]["width"]
 
-        if(self.sort == self.JEWEL):
+        if (self.sort == self.JEWEL):
             self.width = 120
             self.height = 120
-        if(self.sort == self.SCULPTURE ):
+
+        if (self.sort == self.SCULPTURE):
             self.width = 120
             self.height = 120
+
+
 
 
     def draw(self):

@@ -25,15 +25,17 @@ class Collision:
             if(self.collide_guard(index)):
                 guard = Game.map.get_guard(index)
                 guard.SeePlayer = True
-                guard.SeePlayerTime = 1000
+                guard.SeePlayerTime = 500
 
                 if(guard.Hp > 0):
                     player.Aressted = True
                     player.ArrestGuard(guard)
-                    if(player.x < guard.x):
-                        guard.playerState = guard.ANI_LEFT
-                    if(player.x > guard.x):
-                        guard.playerState = guard.ANI_RIGHT
+
+                if (player.x < guard.x):
+                    guard.playerState = guard.ANI_LEFT
+                if (player.x > guard.x):
+                    guard.playerState = guard.ANI_RIGHT
+
                 return
             else:
                 player.Aressted = False
@@ -45,7 +47,6 @@ class Collision:
                 guard = Game.map.get_guard(index)
                 guard.SeePlayer = True
                 guard.SeePlayerTime = 1000
-                guard.playerFloor = player.floor_at_present
 
                 if(player.x < guard.x):
                     guard.playerState = guard.ANI_LEFT
@@ -225,7 +226,6 @@ class Collision:
         guard = Game.map.get_guard(index)
         left_player, bottom_player, right_player, top_player = player.get_bb()
         left_b, bottom_b, right_b, top_b = guard.get_bb()
-        # print(left_b, " , ", bottom_b," , ", right_b, " , ", top_b)
 
         if left_player > right_b: return False
         if right_player < left_b: return False
@@ -235,6 +235,8 @@ class Collision:
 
     def collide_see_guard(self, index):
         if(player.state == player.ANI_CHANGE): return False
+        if (player.state == player.ANI_STAIRS_MOVE_UP): return False
+        if (player.state == player.ANI_STAIRS_MOVE_DOWN): return False
 
         guard = Game.map.get_guard(index)
         left_player, bottom_player, right_player, top_player = player.get_bb()

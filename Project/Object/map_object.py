@@ -123,7 +123,6 @@ class Map:
         for name in treasure_data:
             treasure = treasure_object.Treasure(self.background)
             treasure.name = name
-            treasure.set_sort()
             treasure.x = treasure_data[name]['x']
             treasure.floor_num = treasure_data[name]['floor_num']
             treasure.y = (treasure.floor_num - 1) * (self.floor_cell_height + self.floor_width)\
