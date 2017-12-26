@@ -40,6 +40,7 @@ class Collision:
                     player.ArrestGuard(guard)
                     guard.Arresting = True
 
+
                 if (player.x < guard.x):
                     guard.playerState = guard.ANI_LEFT
                 if (player.x > guard.x):

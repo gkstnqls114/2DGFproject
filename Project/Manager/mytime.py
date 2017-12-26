@@ -27,6 +27,7 @@ class Time:
         if self.minutes == 0 and self.seconds == 0:
             #print("화면이동")
             game_framework.change_state(over_state)
+            return
 
         if self.minutes == 0 and self.seconds <= 10:
             self.color = [255, 0 ,0]

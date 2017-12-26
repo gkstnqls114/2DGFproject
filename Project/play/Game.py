@@ -25,6 +25,7 @@ player = None
 map = None
 gameclear = None
 time = None
+bgm = None
 
 collisionManager = None
 cameraManager = None
@@ -38,6 +39,11 @@ class Game:
         global collisionManager, cameraManager
         global map
         global time
+        global bgm
+
+        bgm = load_music('Sound/game.mp3')
+        bgm.set_volume(64)
+        bgm.repeat_play()
 
         map = map_object.Map()
         player = player_object.Player(map.background)

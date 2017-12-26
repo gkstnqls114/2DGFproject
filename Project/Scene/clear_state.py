@@ -17,6 +17,7 @@ Image = None
 gameclear = None
 pressanykey = None
 font_get_treasure = None
+bgm = None
 
 playerInfo = None
 
@@ -24,6 +25,12 @@ playerInfo = None
 def enter():
     global image, gameclear, pressanykey, font_get_treasure
     global playerInfo
+    global bgm
+
+    bgm = load_music('Sound/game clear.mp3')
+    bgm.set_volume(64)
+    bgm.repeat_play()
+
     image = load_image('Image/Scene/game_clear.png')
     gameclear = load_font('Font/GILSANUB.TTF', 70)
     pressanykey = load_font('Font/GILSANUB.TTF', 30)
@@ -53,7 +60,7 @@ def handle_events(frame_time):
     for event in events:
         if event.type == SDL_QUIT:
             game_framework.quit()
-        elif (event.type) == (SDL_KEYDOWN):
+        elif event.type == SDL_KEYDOWN and event.key == 13:
             game_framework.change_state(title_state)
         pass
     pass
@@ -68,7 +75,7 @@ def draw_scene():
 
     gameclear.draw(120, 520, 'GAME CLEAR', (10, 10, 255))
     font_get_treasure.draw(70, 420, 'You got "%d" treasures!' %(playerInfo.treasure_num), (0, 0, 0))
-    pressanykey.draw(500, 30, 'Press Any Key', (0, 0, 0))
+    pressanykey.draw(450, 30, 'Press ENTER Key', (0, 0, 0))
 
     pass
 

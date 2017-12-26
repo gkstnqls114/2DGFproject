@@ -21,7 +21,7 @@ class Player:
     PIXEL_PER_METER = (10.0 / 0.16)
     RUN_SPEED_KMPH = 20.0
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
-    RUN_SPEED_MPS = (RUN_SPEED_MPM / 50.0)
+    RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
     RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
     # 한번 액션하는데 걸리는 시간 , 초
@@ -40,10 +40,12 @@ class Player:
     def __init__(self, bg):
         if Player.image == None:
             Player.image = load_image('Image/Sprite/2Dplayer_sprite.png')
-        if Player.font == None:
-            Player.font = load_font('ENCR10B.TTF',16)
-        if Player.treasure_font == None:
-            Player.treasure_font = load_font('ENCR10B.TTF', 16)
+
+        self.arrest_sound =  load_wav('Sound/escape.wav')
+        self.arrest_sound.set_volume(64)
+
+        self.get_sound = load_wav('Sound/steal.wav')
+        self.get_sound.set_volume(64)
 
         self.button = button_object.Button(bg)
         self.button.set_player(self)
@@ -176,28 +178,30 @@ class Player:
 
 
         if event.type == SDL_KEYDOWN:
-            a = 97 #아이템 얻기
+            a = 97 #은신
             z = 122 #달리기
-            x = 120 #둔갑술
+            x = 120 #훔치기
             s = 115 #도망가기
             if event.key == z :
                 if (self.Aressted == True): return
                 self.Run = True
 
-            if event.key == x:
+            if event.key == a:
                 if(self.Aressted == True) : return
                 if(self.state != self.ANI_STAND): return
                 self.Change = True
 
-            elif event.key == a:
+            elif event.key == x:
                 if (self.Aressted == True): return
                 if not self.Treasure_Can_Open:return
                 self.Treasure_Can_Open = False
                 self.Treasure_Search = True
+                self.get_sound.play(1)
 
             elif event.key == s:
                 if (self.Aressted == False): return
                 self.guard.Hp -= 1
+                self.arrest_sound.play()
                 if(self.guard.Hp <= 0):
                     self.Aressted = False
 
@@ -260,11 +264,13 @@ class Player:
 
         # key up
         if event.type == SDL_KEYUP:
-            z = 122
-            x = 120
+            a = 97  # 은신
+            z = 122  # 달리기
+            x = 120  # 훔치기
+            s = 115  # 도망가기
             if event.key == z:
                 self.Run = False
-            if event.key == x:
+            if event.key == a:
                 if self.Stairs_Move: return
                 self.Change = False
                 self.state = self.ANI_STAND

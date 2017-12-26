@@ -22,10 +22,17 @@ HOWColor = None
 SelectColor = None
 NotSelectColor = None
 
+bgm = None
+
 def enter():
     global image, START, EXIT, HOW
     global STARTColor, EXITColor, HOWColor
     global SelectColor, NotSelectColor
+    global bgm
+
+    bgm = load_music('Sound/title.mp3')
+    bgm.set_volume(64)
+    bgm.repeat_play()
 
     image = load_image('Image/Scene/title.png')
     START = load_font('Font/GILSANUB.TTF', 40)
@@ -70,7 +77,7 @@ def handle_events(frame_time):
                     pass
                 elif (arrow == GAME_HOW):
 
-                    game_framework.change_state(howto_state)
+                    game_framework.push_state(howto_state)
                     pass
                 elif (arrow == GAME_QUIT):
                     running = False

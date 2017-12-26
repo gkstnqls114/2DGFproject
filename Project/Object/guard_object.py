@@ -20,7 +20,7 @@ class Guard:
     PIXEL_PER_METER = (10.0 / 0.16)
     RUN_SPEED_KMPH = 20.0
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
-    RUN_SPEED_MPS = (RUN_SPEED_MPM / 50.0)
+    RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
     RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
     # 한번 액션하는데 걸리는 시간 , 초
@@ -51,9 +51,9 @@ class Guard:
             Guard.time_image = load_image('Image/guard_time.png')
         if Guard.light_image == None:
             Guard.light_image = load_image('Image/Sprite/guard_light_sprite.png')
-        if Guard.font == None:
-            Guard.font = load_font('ENCR10B.TTF',16)
+
         self.background = bg
+
 
         self.name = None
         self.width = 90
@@ -114,6 +114,7 @@ class Guard:
                        self.background.width)
 
     def update(self, frame_time):
+
         if(self.Hp <= 0):
             self.BlackOut = True
 

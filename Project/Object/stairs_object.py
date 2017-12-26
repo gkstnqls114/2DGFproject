@@ -41,7 +41,6 @@ class Stairs:
                         self.width,
                         self.height)
 
-        self.draw_bb()
 
 
     def get_bottom_bb(self):

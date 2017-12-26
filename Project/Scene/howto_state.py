@@ -33,9 +33,6 @@ def enter():
 
 def exit():
     global image, gameclear, font_get_treasure
-    del(image)
-    del(gameclear)
-    del(font_get_treasure)
 
     pass
 
@@ -52,8 +49,8 @@ def handle_events(frame_time):
     for event in events:
         if event.type == SDL_QUIT:
             game_framework.quit()
-        elif (event.type) == (SDL_KEYDOWN):
-            game_framework.change_state(title_state)
+        elif (event.type) == (SDL_KEYDOWN) and event.key == 13:
+            game_framework.pop_state()
         pass
     pass
 
@@ -65,7 +62,7 @@ def update(frame_time):
 def draw_scene():
     image.draw(400, 300)
 
-    pressanykey.draw(500, 30, 'Press Any Key', (0, 0, 0))
+    pressanykey.draw(500, 30, 'Press ENTER Key', (0, 0, 0))
 
     pass
 
