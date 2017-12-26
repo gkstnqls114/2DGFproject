@@ -1,4 +1,0 @@
-{
-	"Treasure2" : {"x":100, "floor_num":2},
-	"Treasure3" : {"x":100, "floor_num":3}
-}

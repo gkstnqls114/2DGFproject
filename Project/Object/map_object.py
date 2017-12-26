@@ -157,6 +157,10 @@ class Map:
     def get_treasure_len(self):
         return len(self.treasure_group)
 
+    def guard_draw(self):
+        for guard in self.guard_group:
+            guard.draw()
+
     def draw(self):
         self.background.draw()
 
@@ -166,8 +170,6 @@ class Map:
             stairs.draw()
         for treasure in self.treasure_group:
             treasure.draw()
-        for guard in self.guard_group:
-            guard.draw()
             pass
 
         self.door.draw()

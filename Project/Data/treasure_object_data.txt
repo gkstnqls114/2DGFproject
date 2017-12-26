@@ -1,4 +1,6 @@
 {
 	"BOX" : {"width":100, "height":100},
-	"ART" : {"width":120, "height":120}
+	"ART" : {"width":120, "height":120},
+	"JEM" : {"width":100, "height":110},
+	"SCU" : {"width":100, "height":150}
 }

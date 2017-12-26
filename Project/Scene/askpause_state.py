@@ -63,7 +63,7 @@ def handle_events(frame_time):
                 arrow += 1
                 if arrow > NOstate: arrow = YESstate
                 pass
-            elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
+            elif (event.type, event.key) == (SDL_KEYDOWN,13):
                 if (arrow == YESstate):
                     game_framework.push_state(clear_state)
                     pass

@@ -78,6 +78,7 @@ class Game:
     def draw_scene(self):
         map.draw()
         player.draw()
+        map.guard_draw()
         time.draw()
 
 

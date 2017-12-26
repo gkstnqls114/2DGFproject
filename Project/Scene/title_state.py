@@ -3,6 +3,7 @@ from Scene import main_state
 from pico2d import *
 
 from Scene import main_state
+from Scene import howto_state
 from Framwork import game_framework
 
 name = "TitleState"
@@ -63,12 +64,13 @@ def handle_events(frame_time):
                 arrow += 1
                 if arrow > GAME_QUIT: arrow = GAME_START
                 pass
-            elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
+            elif (event.type, event.key) == (SDL_KEYDOWN, 13):
                 if (arrow == GAME_START):
                     game_framework.change_state(main_state)
                     pass
                 elif (arrow == GAME_HOW):
 
+                    game_framework.change_state(howto_state)
                     pass
                 elif (arrow == GAME_QUIT):
                     running = False

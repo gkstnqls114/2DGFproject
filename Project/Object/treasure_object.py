@@ -24,7 +24,7 @@ class Treasure:
         treasure_data = json.load(treasure_data_file)
         treasure_data_file.close()
 
-        self.sort = random.randrange(0,2)
+        self.sort = random.randrange(0,4)
 
         if (self.sort == self.BOX):
             self.width = treasure_data["BOX"]["width"]
@@ -34,15 +34,18 @@ class Treasure:
         if (self.sort == self.ART):
             self.width = treasure_data["ART"]["width"]
             self.height = treasure_data["ART"]["height"]
-            self.sprite_height = treasure_data["BOX"]["width"]
+            self.sprite_height = treasure_data["BOX"]["height"]
 
         if (self.sort == self.JEWEL):
-            self.width = 120
-            self.height = 120
+            self.width = treasure_data["JEM"]["width"]
+            self.height = treasure_data["JEM"]["height"]
+            self.sprite_height = treasure_data["BOX"]["height"] + treasure_data["ART"]["height"]
 
         if (self.sort == self.SCULPTURE):
-            self.width = 120
-            self.height = 120
+            self.width = treasure_data["SCU"]["width"]
+            self.height = treasure_data["SCU"]["height"]
+            self.sprite_height = treasure_data["BOX"]["height"] + treasure_data["ART"]["height"] +\
+                                 treasure_data["JEM"]["height"]
 
 
 
@@ -53,7 +56,7 @@ class Treasure:
                              , self.width, self.height,
                              self.x - self.background.window_left,
                              self.y - self.background.window_bottom)
-        self.draw_bb()
+
         pass
 
 

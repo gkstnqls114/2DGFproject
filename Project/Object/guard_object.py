@@ -204,11 +204,13 @@ class Guard:
     def draw(self):
         if not self.Arresting:
             if self.state == self.ANI_RIGHT:
+                self.light_image.opacify(0.5)
                 self.light_image.clip_draw(self.frame * 235, self.state * 110,\
                             235, 110,\
                             self.x - self.background.window_left + self.width / 2 + 30,\
                              self.y - self.background.window_bottom)
             elif self.state == self.ANI_LEFT:
+                self.light_image.opacify(0.5)
                 self.light_image.clip_draw(self.frame * 235, self.state * 110,\
                             235, 110,\
                             self.x - self.background.window_left - self.width / 2 - 30,\
@@ -227,7 +229,6 @@ class Guard:
                                 self.y - self.background.window_bottom - self.height / 2 - 10,
                                (self.Hp) * 9, 10)
 
-        self.draw_bb()
 
         if(self.SeePlayer):
             if not self.Arresting:

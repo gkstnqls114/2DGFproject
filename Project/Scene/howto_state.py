@@ -11,7 +11,7 @@ from Scene import title_state
 from Scene import main_state
 from play import Game
 
-name = "OverState"
+name = "HOWTOState"
 
 Image = None
 gameclear = None
@@ -24,8 +24,7 @@ playerInfo = None
 def enter():
     global image, gameclear, pressanykey, font_get_treasure
     global playerInfo
-    image = load_image('Image/Scene/game_clear.png')
-    gameclear = load_font('Font/GILSANUB.TTF', 70)
+    image = load_image('Image/Scene/howtoplay.png')
     pressanykey = load_font('Font/GILSANUB.TTF', 30)
     font_get_treasure = load_font('Font/GILSANUB.TTF', 50)
 
@@ -66,8 +65,6 @@ def update(frame_time):
 def draw_scene():
     image.draw(400, 300)
 
-    gameclear.draw(120, 520, 'GAME CLEAR', (10, 10, 255))
-    font_get_treasure.draw(70, 420, 'You got "%d" treasures!' %(playerInfo.treasure_num), (0, 0, 0))
     pressanykey.draw(500, 30, 'Press Any Key', (0, 0, 0))
 
     pass

@@ -165,9 +165,6 @@ class Player:
         else:
             pass
 
-        self.draw_bb()
-
-        Player.treasure_font.draw(self.background.canvas_width - 150, self.background.canvas_height - 100, "Get: %d" %(self.treasure_num))
 
 
     def ArrestGuard(self, guard):
