@@ -5,7 +5,7 @@ from Scene import main_state
 
 
 
-name = "PauseState"
+name = "AskPauseState"
 
 pauseimg = None
 

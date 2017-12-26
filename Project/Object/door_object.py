@@ -3,6 +3,9 @@ import os
 import random
 from pico2d import *
 
+from Framwork import game_framework
+from Scene import clear_state
+
 
 name = "Door"
 
@@ -20,8 +23,10 @@ class door:
         self.background = bg
 
     def update(self, frame_time):
-
         pass
+
+    def game_claer(self):
+        game_framework.change_state(clear_state)
 
 
     def draw(self):

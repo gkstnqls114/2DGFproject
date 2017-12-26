@@ -82,6 +82,9 @@ class Player:
         self.Treasure_Search = False
         self.treasure_num = 0
 
+        #문을 연다
+
+
         # 은신술
         self.Change = False
 

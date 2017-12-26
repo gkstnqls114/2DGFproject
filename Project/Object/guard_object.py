@@ -12,6 +12,8 @@ class Guard:
     image = None
     bump_image = None
     icon = None
+    time_image = None
+    hp_image = None
 
     #FRAME
     PIXEL_PER_METER = (10.0 / 0.16)
@@ -32,6 +34,9 @@ class Guard:
     ANI_BLACKOUT_RIGHT = 2
     ANI_BLACKOUT_LEFT = 3
 
+    MaxHp = 10.0
+    MaxSeeTime = 500
+
     def __init__(self, bg):
         if Guard.image == None:
             Guard.image = load_image('Image/Sprite/guard_sprite.png')
@@ -39,6 +44,10 @@ class Guard:
             Guard.bump_image = load_image('Image/Sprite/bump_sprite.png')
         if Guard.icon == None:
             Guard.icon = load_image('Image/guard see player.png')
+        if Guard.hp_image == None:
+            Guard.hp_image = load_image('Image/guard_hp.png')
+        if Guard.time_image == None:
+            Guard.time_image = load_image('Image/guard_time.png')
         if Guard.font == None:
             Guard.font = load_font('ENCR10B.TTF',16)
         self.background = bg
@@ -65,7 +74,8 @@ class Guard:
 
         #인식했는가 아닌가
         self.SeePlayer = False
-        self.Hp = 10
+        self.Hp = 10.0
+        self.BlackOut = False
 
         self.Arresting = False
 
@@ -81,7 +91,7 @@ class Guard:
         #플레이어를 인식한 시간
         # 0 되면 다시 리셋
         self.SeePlayerTime = 500
-        self.recoveryTime = 100
+
         #플레이어의 상태
         self.playerState = -1
         self.playerFloor = -1
@@ -100,6 +110,9 @@ class Guard:
 
     def update(self, frame_time):
         if(self.Hp <= 0):
+            self.BlackOut = True
+
+        if(self.BlackOut):
             if self.state == self.ANI_RIGHT:
                 self.state = self.ANI_BLACKOUT_RIGHT
                 self.width = 110
@@ -109,18 +122,18 @@ class Guard:
                 self.width = 110
                 self.frame = 0
 
-            self.recoveryTime -= 1
+            self.Hp += 0.1
             self.Arresting = False
 
-            if self.recoveryTime < 0:
+            if self.Hp >= self.MaxHp:
                 if self.state == self.ANI_BLACKOUT_RIGHT:
                     self.state = self.ANI_RIGHT
                 elif self.state == self.ANI_BLACKOUT_LEFT:
                     self.state = self.ANI_LEFT
 
+                self.BlackOut = False
+                self.Hp = self.MaxHp
                 self.width = 90
-                self.Hp = 10
-                self.recoveryTime = 100
             return
 
         self.runningFunc()
@@ -162,7 +175,7 @@ class Guard:
             self.SeePlayerTime = 1000
             self.SeePlayer = False
 
-        if (self.x + self.width / 2 > 1600):
+        if self.x + self.width / 2 > 1600:
             self.playerState = self.ANI_LEFT
             self.Right = False
             self.Left = True
@@ -194,15 +207,25 @@ class Guard:
                              120, 120, \
                              self.x - self.background.window_left,\
                              self.y - self.background.window_bottom)
+            self.hp_image.draw(self.x - self.background.window_left,
+                                self.y - self.background.window_bottom - self.height / 2 - 10,
+                               (self.Hp) * 9, 10)
 
         self.draw_bb()
 
         if(self.SeePlayer):
-            Guard.font.draw(self.x  - self.background.window_left- 35 ,
-                            self.y  - self.background.window_bottom - 100, 'Hp %d' %(self.Hp))
             if not self.Arresting:
-                self.icon.draw(self.x  - self.background.window_left ,
+                self.icon.draw(self.x - self.background.window_left,
                            self.y - self.background.window_bottom + self.height / 2 + 25)
+
+            if self.BlackOut:
+                self.hp_image.draw(self.x - self.background.window_left,
+                                self.y - self.background.window_bottom - self.height / 2 - 10,
+                               (self.Hp) * 9, 10)
+            elif self.Arresting == False:
+                 self.time_image.draw(self.x - self.background.window_left,
+                                     self.y - self.background.window_bottom - self.height / 2 - 10,
+                                     self.SeePlayerTime / self.MaxSeeTime * 90, 10)
         else:
             pass
 
@@ -212,8 +235,8 @@ class Guard:
             self.dir = 7
             self.FRAME_PER_ACTION = 4
         else:
-            self.dir = 5
-            self.FRAME_PER_ACTION = 3
+            self.dir = 3
+            self.FRAME_PER_ACTION = 2.5
 
     def get_bb(self):
         return  self.x  - self.background.window_left- self.width /2 ,\

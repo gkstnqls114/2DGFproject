@@ -20,6 +20,13 @@ class Collision:
         pass
 
     def update(self):
+        #문과 부딪힘
+        if self.collide_door():
+            player.Treasure_Can_Open = True
+        else:
+            player.Treasure_Can_Open = False
+
+
         #경비원과 플레이어 부딪힘
         for index in range (0, Game.map.get_guard_len()):
             if(self.collide_guard(index)):
@@ -27,7 +34,7 @@ class Collision:
                 guard.SeePlayer = True
                 guard.SeePlayerTime = 500
 
-                if(guard.Hp > 0):
+                if(guard.BlackOut == False):
                     player.Aressted = True
                     player.ArrestGuard(guard)
                     guard.Arresting = True
@@ -265,39 +272,19 @@ class Collision:
         return True
         pass
 
+    def collide_door(self):
+        if (player.state == player.ANI_CHANGE): return False
 
-    def collide_guard_bottom(self):
-        #계단 아랫부분 (포인트로 판단)
-        guard = Game.guard
-        b = Game.stairs
+        door = Game.map.door
 
-        center_x, center_y = guard.get_point()
-        left_b, bottom_b, right_b, top_b = b.get_bottom_bb()
+        left_player, bottom_player, right_player, top_player = player.get_bb()
+        left_b, bottom_b, right_b, top_b = door.get_bb()
 
-        if center_x > right_b: return False
-        if center_x < left_b: return False
-        if center_y < bottom_b: return False
-        if center_y > top_b: return False
-
+        if left_player > right_b: return False
+        if right_player < left_b: return False
+        if top_player < bottom_b: return False
+        if bottom_player > top_b: return False
         return True
-
-    def collide_guard_top(self):
-        #계단 윗부분 (포인트로 판단)
-        guard = Game.guard
-        t = Game.stairs
-
-        center_x = guard.get_point_x()
-        center_y = guard.get_point_y()
-        left_t, bottom_t, right_t, top_t = t.get_top_bb()
-
-        if center_x > right_t: return False
-        if center_x < left_t: return False
-        if center_y < bottom_t: return False
-        if center_y > top_t: return False
-
-        return True
-
-    
 
 
 
