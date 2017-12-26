@@ -8,24 +8,35 @@ from play import Game
 from Framwork import game_framework
 from Scene import title_state
 
+from Scene import main_state
+from play import Game
+
 name = "OverState"
 
 Image = None
-gameover = None
+gameclear = None
 pressanykey = None
+font_get_treasure = None
+
+playerInfo = None
+
 
 def enter():
-    global image, gameover, pressanykey
+    global image, gameclear, pressanykey, font_get_treasure
+    global playerInfo
     image = load_image('Image/Scene/game_clear.png')
-    gameover = load_font('Font/GILSANUB.TTF', 70)
+    gameclear = load_font('Font/GILSANUB.TTF', 70)
     pressanykey = load_font('Font/GILSANUB.TTF', 30)
+    font_get_treasure = load_font('Font/GILSANUB.TTF', 50)
 
+    playerInfo = Game.player
     pass
 
 def exit():
-    global image, gameover
+    global image, gameclear, font_get_treasure
     del(image)
-    del(gameover)
+    del(gameclear)
+    del(font_get_treasure)
 
     pass
 
@@ -55,7 +66,8 @@ def update(frame_time):
 def draw_scene():
     image.draw(400, 300)
 
-    gameover.draw(170, 500, 'GAME CLEAR', (255, 0, 0))
+    gameclear.draw(120, 520, 'GAME CLEAR', (10, 10, 255))
+    font_get_treasure.draw(70, 420, 'You got "%d" treasures!' %(playerInfo.treasure_num), (0, 0, 0))
     pressanykey.draw(500, 30, 'Press Any Key', (0, 0, 0))
 
     pass

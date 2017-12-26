@@ -23,7 +23,7 @@ name = "Game"
 player = None
 
 map = None
-gameover = None
+gameclear = None
 time = None
 
 collisionManager = None

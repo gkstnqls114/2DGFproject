@@ -11,18 +11,11 @@ pauseimg = None
 
 class Pause:
     def __init__(self):
-        self.image = load_image('pause.png')
+        self.image = load_image('Image/Scene/pause.png')
         self.x, self.y = 400, 300
-        self.show = True
-    def draw(self):
-        if self.show == True:
-            self.image.draw(self.x, self.y)
-            delay(0.1)
-            self.show = False
-        elif self.show == False:
-            delay(0.1)
-            self.show = True
 
+    def draw(self):
+        self.image.draw(self.x, self.y)
 
 def enter():
     global pauseimg
@@ -41,16 +34,16 @@ def resume():
     pass
 
 
-def handle_events():
+def handle_events(frame_tome):
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
             game_framework.quit()
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_p:
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.pop_state()
 
 
-def update():
+def update(frame_time):
     pass
 
 

@@ -6,6 +6,7 @@ from pico2d import *
 #만듬
 from play import Game
 from Framwork import game_framework
+from Scene import pause_state
 
 name = "MainState"
 
@@ -18,9 +19,7 @@ def enter():
     pass
 
 def exit():
-    global game
-    game.exit()
-    del(game)
+
     pass
 
 
@@ -37,8 +36,6 @@ def handle_events(frame_time):
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.change_state(title_state)
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_p:
             game_framework.push_state(pause_state)
         else:
             game.handle_events(event)
@@ -53,7 +50,6 @@ def update(frame_time):
 def draw_scene():
     game.draw_scene()
     pass
-
 
 
 def draw():

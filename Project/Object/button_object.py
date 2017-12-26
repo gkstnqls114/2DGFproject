@@ -36,7 +36,7 @@ class Button:
             self.state = self.ANI_A_GET_TREASURE
         elif self.player.Stairs_Can_Down:
             self.state = self.ANI_CAN_MOVE_DOWN
-        elif self.player.Stairs_Can_Up:
+        elif self.player.Stairs_Can_Up or self.player.Door_Can_Open:
             self.state = self.ANI_CAN_MOVE_UP
         else:
             self.state = self.ANI_NOTHING

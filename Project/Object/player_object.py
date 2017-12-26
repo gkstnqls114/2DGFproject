@@ -5,6 +5,11 @@ from pico2d import *
 
 from Object import button_object
 
+
+from Framwork import game_framework
+from Scene import clear_state
+from Scene import askpause_state
+
 name = "Player"
 
 class Player:
@@ -83,7 +88,7 @@ class Player:
         self.treasure_num = 0
 
         #문을 연다
-
+        self.Door_Can_Open = False
 
         # 은신술
         self.Change = False
@@ -102,10 +107,13 @@ class Player:
         self.y = clamp(0,
                        self.y,
                        self.background.height)
-        self.x = clamp(0,
+        self.x = clamp(self.width / 2,
                        self.x,
-                       self.background.width)
+                       self.background.width - self.width /2)
 
+
+    def ask_game_clear(self):
+        game_framework.push_state(askpause_state)
 
     def update(self, frame_time):
         if(self.Change):
@@ -144,6 +152,8 @@ class Player:
         if (self.Left):
             self.state = self.ANI_LEFT
             self.x -= self.dir
+
+        self.button.update(frame_time)
 
     def draw(self):
         self.button.draw()
@@ -207,6 +217,11 @@ class Player:
                 if self.Change: return
                 self.Left = True
                 self.state = self.ANI_LEFT
+
+            if event.key == SDLK_UP and self.Door_Can_Open:
+                if (self.Aressted == True): return
+                if (self.Change): return
+                self.ask_game_clear()
 
             if event.key == SDLK_UP and self.Stairs_Can_Up:
                 if (self.Aressted == True): return

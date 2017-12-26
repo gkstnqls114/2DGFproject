@@ -5,7 +5,7 @@ import platform
 from Scene import start_state
 from Scene import main_state
 from Scene import title_state
-from Scene import over_state
+from Scene import askpause_state
 
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
@@ -17,6 +17,6 @@ else:
 
 
 open_canvas(WINDOW_WIDTH , WINDOW_HEIGHT)
-game_framework.run(over_state)
+game_framework.run(main_state)
 #game_framework.run(start_state)
 close_canvas()

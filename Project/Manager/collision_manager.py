@@ -22,17 +22,18 @@ class Collision:
     def update(self):
         #문과 부딪힘
         if self.collide_door():
-            player.Treasure_Can_Open = True
+            player.Door_Can_Open = True
         else:
-            player.Treasure_Can_Open = False
+            player.Door_Can_Open = False
 
 
         #경비원과 플레이어 부딪힘
         for index in range (0, Game.map.get_guard_len()):
             if(self.collide_guard(index)):
                 guard = Game.map.get_guard(index)
+
                 guard.SeePlayer = True
-                guard.SeePlayerTime = 500
+                guard.SeePlayerTime = guard.MaxSeeTime
 
                 if(guard.BlackOut == False):
                     player.Aressted = True
@@ -53,8 +54,34 @@ class Collision:
         for index in range (0, Game.map.get_guard_len()):
             if(self.collide_see_guard(index)):
                 guard = Game.map.get_guard(index)
-                guard.SeePlayer = True
-                guard.SeePlayerTime = 500
+                if(guard.BlackOut):
+                    guard.SeePlayer = True
+                    guard.PrevPlayerState =  player.ANI_CHANGE
+                    guard.SeePlayerChange = False
+                    continue
+                if(guard.Arresting):
+                    guard.SeePlayer = True
+                    guard.PrevPlayerState =  player.ANI_CHANGE
+                    guard.SeePlayerChange = False
+                    continue
+
+                if guard.SeePlayerTime <= 0:
+                    guard.SeePlayerTime = guard.MaxSeeTime
+
+                #중간 상태 변화 있다면...
+                CurrPlayerstate = player.state
+                if (CurrPlayerstate == player.ANI_CHANGE and guard.SeePlayer == False):
+                    guard.SeePlayer = False
+                else:
+                    guard.SeePlayer = True
+
+                if (guard.PrevPlayerState != player.ANI_CHANGE) and CurrPlayerstate == player.ANI_CHANGE:
+                    guard.SeePlayerChange = True
+
+                guard.PrevPlayerState = player.state
+
+                if (guard.SeePlayerChange == False):
+                    continue
 
                 if(player.x < guard.x):
                     guard.playerState = guard.ANI_LEFT
@@ -227,11 +254,15 @@ class Collision:
         pass
 
     def collide_guard(self, index):
-        if (player.state == player.ANI_CHANGE): return False
+        guard = Game.map.get_guard(index)
+        if guard.SeePlayerChange == False:
+            if (player.state == player.ANI_CHANGE): return False
+        else:
+            pass
+
         if (player.state == player.ANI_STAIRS_MOVE_UP): return False
         if (player.state == player.ANI_STAIRS_MOVE_DOWN): return False
 
-        guard = Game.map.get_guard(index)
         left_player, bottom_player, right_player, top_player = player.get_bb()
         left_b, bottom_b, right_b, top_b = guard.get_bb()
 
@@ -242,18 +273,30 @@ class Collision:
         return True
 
     def collide_see_guard(self, index):
-        if(player.state == player.ANI_CHANGE): return False
+        guard = Game.map.get_guard(index)
+
         if (player.state == player.ANI_STAIRS_MOVE_UP): return False
         if (player.state == player.ANI_STAIRS_MOVE_DOWN): return False
 
-        guard = Game.map.get_guard(index)
         left_player, bottom_player, right_player, top_player = player.get_bb()
         left_b, bottom_b, right_b, top_b = guard.get_see_bb()
 
-        if left_player > right_b: return False
-        if right_player < left_b: return False
-        if top_player < bottom_b: return False
-        if bottom_player > top_b: return False
+        if left_player > right_b:
+            guard.PrevPlayerState =  player.ANI_CHANGE
+            guard.SeePlayerChange = False
+            return False
+        if right_player < left_b:
+            guard.PrevPlayerState = player.ANI_CHANGE
+            guard.SeePlayerChange = False
+            return False
+        if top_player < bottom_b:
+            guard.PrevPlayerState =  player.ANI_CHANGE
+            guard.SeePlayerChange = False
+            return False
+        if bottom_player > top_b:
+            guard.PrevPlayerState =  player.ANI_CHANGE
+            guard.SeePlayerChange = False
+            return False
         return True
 
     def collide_treasure(self, index):

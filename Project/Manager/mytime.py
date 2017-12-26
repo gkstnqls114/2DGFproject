@@ -15,8 +15,8 @@ class Time:
         self.startTime = time.time()
         self.elapsedTime = time.time() - self.startTime
 
-        self.minutes = 1
-        self.seconds = 20
+        self.minutes = 0
+        self.seconds = 30
         self.color = [0, 0, 0]
 
         self.count = 1
@@ -28,7 +28,7 @@ class Time:
             #print("화면이동")
             game_framework.change_state(over_state)
 
-        if self.minutes <= 1 and self.seconds == 0:
+        if self.minutes == 0 and self.seconds <= 10:
             self.color = [255, 0 ,0]
 
         self.elapsedTime = time.time() - self.startTime

@@ -53,6 +53,7 @@ class Map:
         self.door.y = self.floor_width + self.door.height / 2
         self.background.width = self.map_width
         self.background.height = self.map_height
+        print (self.background.width ," ", self.background.height)
 
 
     def create_floor(self):
@@ -112,13 +113,17 @@ class Map:
 
         treasure_group = []
         for floornum in range(1, self.number_of_floor):
-            for i in range(0, 6):
+            for i in range(0, 8):
                 treasure = treasure_object.Treasure(self.background)
 
-                if floornum % 2 == 1:
-                    treasure.x = random.randrange(200, self.map_width - 500)
+                if floornum == 1:
+                    if i >= 7:
+                        continue
+                    treasure.x = 300 + i * 130
+                elif floornum % 2 == 1:
+                    treasure.x = 150 + i * 130
                 else:
-                    treasure.x = random.randrange(200, self.map_width - treasure.width / 2 - 50)
+                    treasure.x = self.map_width - 150 -i * 130
 
                 treasure.floor_num = floornum
                 treasure.y = (treasure.floor_num - 1) * (self.floor_cell_height + self.floor_width)\

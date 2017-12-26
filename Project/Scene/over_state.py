@@ -11,11 +11,11 @@ from Scene import title_state
 name = "OverState"
 
 Image = None
-gameover = None
+gameclear = None
 pressanykey = None
 
 def enter():
-    global image, gameover, pressanykey
+    global image, gameclear, pressanykey
     image = load_image('Image/Scene/game_over.png')
     gameover = load_font('Font/GILSANUB.TTF', 70)
     pressanykey = load_font('Font/GILSANUB.TTF', 30)
@@ -23,7 +23,7 @@ def enter():
     pass
 
 def exit():
-    global image, gameover
+    global image, gameclear
     del(image)
     del(gameover)
 
@@ -55,7 +55,7 @@ def update(frame_time):
 def draw_scene():
     image.draw(400, 300)
 
-    gameover.draw(170, 500, 'GAME OVER', (255, 0, 0))
+    gameclear.draw(170, 500, 'GAME OVER', (255, 0, 0))
     pressanykey.draw(500, 30, 'Press Any Key', (0, 0, 0))
 
     pass

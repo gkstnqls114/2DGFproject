@@ -14,6 +14,7 @@ class Guard:
     icon = None
     time_image = None
     hp_image = None
+    light_image = None
 
     #FRAME
     PIXEL_PER_METER = (10.0 / 0.16)
@@ -35,7 +36,7 @@ class Guard:
     ANI_BLACKOUT_LEFT = 3
 
     MaxHp = 10.0
-    MaxSeeTime = 500
+    MaxSeeTime = 300
 
     def __init__(self, bg):
         if Guard.image == None:
@@ -48,6 +49,8 @@ class Guard:
             Guard.hp_image = load_image('Image/guard_hp.png')
         if Guard.time_image == None:
             Guard.time_image = load_image('Image/guard_time.png')
+        if Guard.light_image == None:
+            Guard.light_image = load_image('Image/Sprite/guard_light_sprite.png')
         if Guard.font == None:
             Guard.font = load_font('ENCR10B.TTF',16)
         self.background = bg
@@ -74,6 +77,8 @@ class Guard:
 
         #인식했는가 아닌가
         self.SeePlayer = False
+        self.PrevPlayerState = -1
+        self.SeePlayerChange = False
         self.Hp = 10.0
         self.BlackOut = False
 
@@ -90,7 +95,7 @@ class Guard:
         self.floor_num = 1
         #플레이어를 인식한 시간
         # 0 되면 다시 리셋
-        self.SeePlayerTime = 500
+        self.SeePlayerTime = self.MaxSeeTime
 
         #플레이어의 상태
         self.playerState = -1
@@ -171,8 +176,8 @@ class Guard:
         # 쫓아간다
         self.SeePlayerTime -= 1
 
-        if (self.SeePlayerTime == 0):
-            self.SeePlayerTime = 1000
+        if (self.SeePlayerTime <= 0):
+            self.SeePlayerTime = 0
             self.SeePlayer = False
 
         if self.x + self.width / 2 > 1600:
@@ -198,6 +203,17 @@ class Guard:
 
     def draw(self):
         if not self.Arresting:
+            if self.state == self.ANI_RIGHT:
+                self.light_image.clip_draw(self.frame * 235, self.state * 110,\
+                            235, 110,\
+                            self.x - self.background.window_left + self.width / 2 + 30,\
+                             self.y - self.background.window_bottom)
+            elif self.state == self.ANI_LEFT:
+                self.light_image.clip_draw(self.frame * 235, self.state * 110,\
+                            235, 110,\
+                            self.x - self.background.window_left - self.width / 2 - 30,\
+                             self.y - self.background.window_bottom)
+
             self.image.clip_draw(self.frame * self.width, self.state * self.height,\
                              self.width, self.height, \
                              self.x - self.background.window_left,\
